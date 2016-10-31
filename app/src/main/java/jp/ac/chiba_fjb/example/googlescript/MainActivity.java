@@ -177,16 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(op == null || op.getError() != null)
                             textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
                         else {
-//                            //戻ってくる型は、スクリプト側の記述によって変わる
-//                            List<String> res =  (List<String>)op.getResponse().get("result");
-//                            int i = 0;
-//                            for(String s : res){
-//                                TextView textView2 = new TextView(MainActivity.this);
-//                                textView2.setTag(s);
-//                                textView2.setText("Script結果:"+s+"\n");
-//                                layout.addView(textView2);
-//                                i++;
-//                            }
+                            //戻ってくる型は、スクリプト側の記述によって変わる
                             //集計画面表示
                             ArrayList<ArrayList<String>> resList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
                             String ListR[] = new String[125];
@@ -248,17 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(op == null || op.getError() != null)
                             textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
                         else {
-//                            //戻ってくる型は、スクリプト側の記述によって変わる
-//                            List<String> res =  (List<String>)op.getResponse().get("result");
-//                            int i = 0;
-//                            for(String s : res){
-//                                TextView textView2 = new TextView(MainActivity.this);
-//                                textView2.setTag(s);
-//                                textView2.setText("Script結果:"+s+"\n");
-//                                layout.addView(textView2);
-//                                i++;
-//                            }
-                            //集計画面表示
+                            //戻ってくる型は、スクリプト側の記述によって変わる
                             ArrayList<ArrayList<String>> resList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
                             String ListRp[] = new String[242];
 //                            textView.setText("解答:" +resList+"/");
@@ -290,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
     }
+    
 
     @Override
     public void onClick(View v) {
