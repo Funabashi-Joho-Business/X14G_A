@@ -41,7 +41,6 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
 
         //キー登録用SHA1の出力(いらなければ消す)
     //    Log.d("フィンガーコード",AppFinger.getSha1(this));
-        b2 =(Button)findViewById(R.id.button2);
 
         //Scriptで必要な権限を記述する
         final String[] SCOPES = {
@@ -64,14 +63,14 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                     params, new GoogleScript.ScriptListener() {
                         @Override
                         public void onExecuted(GoogleScript script, Operation op) {
-                            TextView textView = (TextView) findViewById(R.id.textMessage);
+        //                    TextView textView = (TextView) findViewById(R.id.textMessage);
 
-                            if (op == null || op.getError() != null)
-                                textView.append("Script結果:エラー\n" + op.getError() != null ? op.getError().getMessage() : "");
-                            else {
+                            if (op == null || op.getError() != null) {
+                                //                       textView.append("Script結果:エラー\n" + op.getError() != null ? op.getError().getMessage() : "");
+                            }else {
                                 //戻ってくる型は、スクリプト側の記述によって変わる
                                 String s = (String) op.getResponse().get("result");
-                                textView.append("Script結果:" + s + "\n");
+         //                       textView.append("Script結果:" + s + "\n");
                                 //ans();
                             }
                         }
@@ -112,11 +111,11 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, Operation op) {
-                        TextView textView = (TextView) findViewById(R.id.textMessage);
+                        //                     TextView textView = (TextView) findViewById(R.id.textMessage);
 
-                        if(op == null || op.getError() != null)
-                            textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
-                        else {
+                        if (op == null || op.getError() != null){
+                        //                       textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
+                    }else {
                             //戻ってくる型は、スクリプト側の記述によって変わる
                             ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
                             String ListA[] = new String[160];
@@ -171,11 +170,11 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, Operation op) {
-                        TextView textView = (TextView) findViewById(R.id.textMessage);
+                        //           TextView textView = (TextView) findViewById(R.id.textMessage);
 
-                        if(op == null || op.getError() != null)
-                            textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
-                        else {
+                        if (op == null || op.getError() != null){
+                        //               textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
+                        }else {
                             //戻ってくる型は、スクリプト側の記述によって変わる
                             //集計画面表示
                             ArrayList<ArrayList<String>> resList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
@@ -233,11 +232,11 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, Operation op) {
-                        TextView textView = (TextView) findViewById(R.id.textMessage);
+                        //TextView textView = (TextView) findViewById(R.id.textMessage);
 
-                        if(op == null || op.getError() != null)
-                            textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
-                        else {
+                        if(op == null || op.getError() != null) {
+                            //   textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
+                        }else {
                             //戻ってくる型は、スクリプト側の記述によって変わる
                             ArrayList<ArrayList<String>> resList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
                             String ListRp[] = new String[242];
@@ -265,7 +264,7 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                             //textView2.setTag(i);
                             layout.addView(textView2);
 
-                            textView.setText("学籍番号:" + ListRp[240]+"点数:"+ListRp[241]+"/");
+                         //   textView.setText("学籍番号:" + ListRp[240]+"点数:"+ListRp[241]+"/");
                         }
                     }
                 });

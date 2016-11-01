@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDECEC">
@@ -31,7 +32,8 @@
             android:layout_marginTop="0dp"
             android:layout_height="60dp"
             android:fontFamily="sans-serif"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            tools:ignore="RtlSymmetry,SpUsage,UnusedAttribute" />
     </LinearLayout>
 
     <LinearLayout
@@ -79,7 +81,8 @@
             android:orientation="vertical"
             android:id="@+id/layout1"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            tools:ignore="ScrollViewSize">
 
             <TextView
                 android:text="FE_H28春午前問題"

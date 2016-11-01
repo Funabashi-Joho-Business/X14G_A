@@ -8,8 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;import com.example.x14g008.magonote.R;
-
+import android.view.WindowManager;
 
 public class MyDialog extends DialogFragment {
 

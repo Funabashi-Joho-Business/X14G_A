@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GoogleScript.iml" filepath="$PROJECT_DIR$/GoogleScript.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x14gA_N.iml" filepath="$PROJECT_DIR$/x14gA_N.iml" />
     </modules>
   </component>
 </project>

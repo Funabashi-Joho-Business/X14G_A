@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;import com.example.x14g008.magonote.R;
+import android.widget.TextView;
 
 
 public class Kaitou extends AppCompatActivity implements View.OnClickListener {
