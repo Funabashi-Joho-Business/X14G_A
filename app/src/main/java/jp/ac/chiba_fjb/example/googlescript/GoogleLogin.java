@@ -23,60 +23,60 @@ function Main(name) {
 }
  */
 
-public class GoogleLogin extends AppCompatActivity implements View.OnClickListener {
+public class GoogleLogin extends AppCompatActivity  {
 
     private GoogleScript mGoogleScript;
     Button b2;
     private LinearLayout layout;
-
-
+    final String[] SCOPES ={"https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/script.storage",
+            "https://www.googleapis.com/auth/spreadsheets"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(activity_main);
+
+    }
+
+
+
+    GoogleLogin() {
         //インスタンスの取得
-        layout = (LinearLayout)findViewById(R.id.layout1);
 
 
         //キー登録用SHA1の出力(いらなければ消す)
     //    Log.d("フィンガーコード",AppFinger.getSha1(this));
 
         //Scriptで必要な権限を記述する
-        final String[] SCOPES = {
-                "https://www.googleapis.com/auth/drive",
-                "https://www.googleapis.com/auth/script.storage",
-                "https://www.googleapis.com/auth/spreadsheets"};
 
-        mGoogleScript = new GoogleScript(this,SCOPES);
+
+
         //強制的にアカウントを切り替える場合
         // mGoogleScript.resetAccount();
 
 
 
-            //送信パラメータ
-            List<Object> params = new ArrayList<>();
-            params.add("あいうえお");
-
-            //ID,ファンクション名,結果コールバック
-            mGoogleScript.execute("1VpVD7z_Jj7jxz4Jj46qT2beZayJIPhq7RnHn3ydGBPfrUpdilyQHG7h1", "action",
-                    params, new GoogleScript.ScriptListener() {
-                        @Override
-                        public void onExecuted(GoogleScript script, Operation op) {
-        //                    TextView textView = (TextView) findViewById(R.id.textMessage);
-
-                            if (op == null || op.getError() != null) {
-                                //                       textView.append("Script結果:エラー\n" + op.getError() != null ? op.getError().getMessage() : "");
-                            }else {
-                                //戻ってくる型は、スクリプト側の記述によって変わる
-                                String s = (String) op.getResponse().get("result");
-         //                       textView.append("Script結果:" + s + "\n");
-                                //ans();
-                            }
-                        }
-                    });
-
-        b2.setOnClickListener(this);
+//            //送信パラメータ
+//            List<Object> params = new ArrayList<>();
+//            params.add("あいうえお");
+//
+//            //ID,ファンクション名,結果コールバック
+//            mGoogleScript.execute("1VpVD7z_Jj7jxz4Jj46qT2beZayJIPhq7RnHn3ydGBPfrUpdilyQHG7h1", "action",
+//                    params, new GoogleScript.ScriptListener() {
+//                        @Override
+//                        public void onExecuted(GoogleScript script, Operation op) {
+//        //                    TextView textView = (TextView) findViewById(R.id.textMessage);
+//
+//                            if (op == null || op.getError() != null) {
+//                                //                       textView.append("Script結果:エラー\n" + op.getError() != null ? op.getError().getMessage() : "");
+//                            }else {
+//                                //戻ってくる型は、スクリプト側の記述によって変わる
+//                                String s = (String) op.getResponse().get("result");
+//         //                       textView.append("Script結果:" + s + "\n");
+//                                //ans();
+//                            }
+//                        }
+//                    });
+//
     }
 
     @Override
@@ -89,25 +89,13 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    protected void ans() {//解答
-        //キー登録用SHA1の出力(いらなければ消す)
-        //    Log.d("フィンガーコード",AppFinger.getSha1(this));
-
-        //Scriptで必要な権限を記述する
-        final String[] SCOPES = {
-                "https://www.googleapis.com/auth/drive",
-                "https://www.googleapis.com/auth/script.storage",
-                "https://www.googleapis.com/auth/spreadsheets"};
-
+    protected void ans(String textValue) {//解答
         mGoogleScript = new GoogleScript(this,SCOPES);
-        //強制的にアカウントを切り替える場合
-         //mGoogleScript.resetAccount();
-
         //送信パラメータ
         List<Object> params = new ArrayList<>();
-        params.add("テスト名");
+        params.add(textValue);
         //ID,ファンクション名,結果コールバック
-        mGoogleScript.execute("1VpVD7z_Jj7jxz4Jj46qT2beZayJIPhq7RnHn3ydGBPfrUpdilyQHG7h1", "Ans",
+        mGoogleScript.execute("1VpVD7z_Jj7jxz4Jj46qT2beZayJIPhq7RnHn3ydGBPfrUpdilyQHG7h1", "ans2",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, Operation op) {
@@ -125,10 +113,10 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                                 String a = ansList.get(i).toString();
                                 ListA[x] =a.substring(1,2);//解答
                                 ListA[x+1] =a.substring(4,a.length()-1);//配点
-                                TextView textView2 = new TextView(GoogleLogin.this);
-                                textView2.setText("解答:" + ListA[x]+"　配点:"+ListA[x+1]+"/");
-                                //textView2.setTag(i);
-                                layout.addView(textView2);
+//                                TextView textView2 = new TextView(GoogleLogin.this);
+//                                textView2.setText("解答:" + ListA[x]+"　配点:"+ListA[x+1]+"/");
+//                                //textView2.setTag(i);
+//                                layout.addView(textView2);
                                 x = x+2;
                             }
 //                            textView.setText(ListA[0]+ListA[1]+ListA[2]+ListA[3]+ListA[4]+ListA[5]);
@@ -148,18 +136,7 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                 });
     }
     protected void res() {//集計一覧
-        //キー登録用SHA1の出力(いらなければ消す)
-        //    Log.d("フィンガーコード",AppFinger.getSha1(this));
-
-        //Scriptで必要な権限を記述する
-        final String[] SCOPES = {
-                "https://www.googleapis.com/auth/drive",
-                "https://www.googleapis.com/auth/script.storage",
-                "https://www.googleapis.com/auth/spreadsheets"};
-
-        mGoogleScript = new GoogleScript(this,SCOPES);
-        //強制的にアカウントを切り替える場合
-        // mGoogleScript.resetAccount();
+         mGoogleScript = new GoogleScript(this,SCOPES);
 
         //送信パラメータ
         List<Object> params = new ArrayList<>();
@@ -186,10 +163,10 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                                 String a = resList.get(i).toString();
                                 ListR[y] =a.substring(1,8);//学籍番号
                                 ListR[y+1] =a.substring(9,a.length()-1);//点数
-                                TextView textView2 = new TextView(GoogleLogin.this);
-                                textView2.setText("学籍番号:" + ListR[y]+"　点数:"+ListR[y+1]+"/");
-                                //textView2.setTag(i);
-                                layout.addView(textView2);
+//                                TextView textView2 = new TextView(GoogleLogin.this);
+//                                textView2.setText("学籍番号:" + ListR[y]+"　点数:"+ListR[y+1]+"/");
+//                                //textView2.setTag(i);
+//                                layout.addView(textView2);
                                 y = y+2;
                             }
 //                            y=120;
@@ -199,24 +176,16 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                             ListR[y+1] = a.substring(1,a.length()-1);
                             a = resList.get(62).toString();//最低点
                             ListR[y+2] = a.substring(1,a.length()-1);
-                            TextView textView2 = new TextView(GoogleLogin.this);
-                            textView2.setText("平均点:" + ListR[y]+"最高点:"+ListR[y+1]+"最低点:"+ListR[y+2]+"/");
-                            //textView2.setTag(i);
-                            layout.addView(textView2);
+//                            TextView textView2 = new TextView(GoogleLogin.this);
+//                            textView2.setText("平均点:" + ListR[y]+"最高点:"+ListR[y+1]+"最低点:"+ListR[y+2]+"/");
+//                            textView2.setTag(i);
+//                            layout.addView(textView2);
                         }
                     }
                 });
     }
 
     protected void resP() {//個人集計
-        //キー登録用SHA1の出力(いらなければ消す)
-        //    Log.d("フィンガーコード",AppFinger.getSha1(this));
-
-        //Scriptで必要な権限を記述する
-        final String[] SCOPES = {
-                "https://www.googleapis.com/auth/drive",
-                "https://www.googleapis.com/auth/script.storage",
-                "https://www.googleapis.com/auth/spreadsheets"};
 
         mGoogleScript = new GoogleScript(this,SCOPES);
         //強制的にアカウントを切り替える場合
@@ -248,10 +217,10 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                                 ListRp[y] =a.substring(1,2);//正答
                                 ListRp[y+1] =a.substring(4,5);//解答
                                 ListRp[y+2] =a.substring(6,a.length()-1);//正答率
-                                TextView textView2 = new TextView(GoogleLogin.this);
-                                textView2.setText("正答:" + ListRp[y]+"　解答:"+ListRp[y+1]+"　正答率:"+ListRp[y+2]+"/");
+                                //TextView textView2 = new TextView(GoogleLogin.this);
+                                //textView2.setText("正答:" + ListRp[y]+"　解答:"+ListRp[y+1]+"　正答率:"+ListRp[y+2]+"/");
                                 //textView2.setTag(i);
-                                layout.addView(textView2);
+                                //layout.addView(textView2);
                                 y = y+3;
                             }
 //                            y=240;
@@ -259,22 +228,15 @@ public class GoogleLogin extends AppCompatActivity implements View.OnClickListen
                             ListRp[y] = a.substring(1,a.length()-1);
                             a = resList.get(81).toString();//点数
                             ListRp[y+1] = a.substring(1,a.length()-1);
-                            TextView textView2 = new TextView(GoogleLogin.this);
-                            textView2.setText("学籍番号:" + ListRp[y]+"点数:"+ListRp[y+1]+"/");
+                            //TextView textView2 = new TextView(GoogleLogin.this);
+                            //textView2.setText("学籍番号:" + ListRp[y]+"点数:"+ListRp[y+1]+"/");
                             //textView2.setTag(i);
-                            layout.addView(textView2);
+                            //layout.addView(textView2);
 
                          //   textView.setText("学籍番号:" + ListRp[240]+"点数:"+ListRp[241]+"/");
                         }
                     }
                 });
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        resP();
-
     }
 }
 
