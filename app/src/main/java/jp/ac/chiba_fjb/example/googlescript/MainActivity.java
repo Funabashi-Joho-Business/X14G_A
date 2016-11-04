@@ -21,25 +21,18 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener {
 
-    int i =0;
-    String textViewValue;
-    private Bundle mBundle;
     private String mEditValue;
 
-    private GoogleScript mGoogleScript;
-    private LinearLayout layout;
-    final String[] SCOPES ={"https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/script.storage",
-            "https://www.googleapis.com/auth/spreadsheets"};
 
+    private GoogleScript mGoogleScript;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.main);
+
 
         ImageView edit =(ImageView)findViewById(R.id.imageView2);
         edit.setOnClickListener(this);
@@ -111,67 +104,110 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         textView.setBackgroundResource(R.drawable.border);  //背景色の設定
         layout.addView(textView);
-        i++;
         textView.setOnClickListener(this);
-        ans(textValue);
+        googleLogin(textValue);
     }
 
     //       Drawable border = getResources().getDrawable(R.drawable.border);
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //必要に応じてアカウントや権限ダイアログの表示
-        mGoogleScript.onActivityResult(requestCode,resultCode,data);
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        //必要に応じてアカウントや権限ダイアログの表示
+//        mGoogleScript.onActivityResult(requestCode,resultCode,data);
+//
+//
+//    }
 
 
-    }
+//  protected void ans(String textValue) {//解答
+//        mGoogleScript = new GoogleScript(this,SCOPES);
+//        //送信パラメータ
+//        List<Object> params = new ArrayList<>();
+//        params.add(textValue);
+//        //ID,ファンクション名,結果コールバック
+//        mGoogleScript.execute("10Q1chEvLIxSTT3IpaZ_e9_6h2Q8nVpt9dKKorK-oh_BF7zd1eC_2PMiF", "test01",
+//                params, new GoogleScript.ScriptListener() {
+//                    @Override
+//                    public void onExecuted(GoogleScript script, Operation op) {
+//                        //                     TextView textView = (TextView) findViewById(R.id.textMessage);
+//
+//                        if (op == null || op.getError() != null){
+//
+//                            //                       textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
+//                        }else {
+//                            //戻ってくる型は、スクリプト側の記述によって変わる
+//                            ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+//                            String ListA[] = new String[160];
+//                            //int aaa = ansList.size();
+//                            int x=0;
+//                            for(int i=0;i < ansList.size();i++){
+//                                String a = ansList.get(i).toString();
+//                                ListA[x] =a.substring(1,2);//解答
+//                                ListA[x+1] =a.substring(4,a.length()-1);//配点
+////                                TextView textView2 = new TextView(GoogleLogin.this);
+////                                textView2.setText("解答:" + ListA[x]+"　配点:"+ListA[x+1]+"/");
+////                                //textView2.setTag(i);
+////                                layout.addView(textView2);
+//                                x = x+2;
+//                            }
+////                            textView.setText(ListA[0]+ListA[1]+ListA[2]+ListA[3]+ListA[4]+ListA[5]);
+////                            for(int i=61;i < ansList.size();i++){
+////                                String a = ansList.get(i).toString();
+////                                ListA[x] =a;//解答
+////                                TextView textView2 = new TextView(GoogleLogin.this);
+////                                textView2.setText("平均点:" + ListA[x]+"/");
+////                                //textView2.setTag(i);
+////                                layout.addView(textView2);
+////                                x = x+1;
+////                            }
+//
+//
+//                        }
+//                    }
+//                });
+//    }
 
 
-    protected void ans(String textValue) {//解答
+
+    protected void googleLogin (String textvalue){
+        final String[] SCOPES = {
+                "https://www.googleapis.com/auth/drive",
+                "https://www.googleapis.com/auth/script.storage",
+                "https://www.googleapis.com/auth/spreadsheets"};
+
+
         mGoogleScript = new GoogleScript(this,SCOPES);
+        //強制的にアカウントを切り替える場合
+         mGoogleScript.resetAccount();
+
         //送信パラメータ
         List<Object> params = new ArrayList<>();
-        params.add(textValue);
+        params.add(textvalue);
+
         //ID,ファンクション名,結果コールバック
-        mGoogleScript.execute("1VpVD7z_Jj7jxz4Jj46qT2beZayJIPhq7RnHn3ydGBPfrUpdilyQHG7h1", "ans2",
+        mGoogleScript.execute("10Q1chEvLIxSTT3IpaZ_e9_6h2Q8nVpt9dKKorK-oh_BF7zd1eC_2PMiF", "ans2",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, Operation op) {
-                        //                     TextView textView = (TextView) findViewById(R.id.textMessage);
+                     //   TextView textView = (TextView) findViewById(R.id.textMessage);
 
-                        if (op == null || op.getError() != null){
-
-                            //                       textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
+                        if(op == null || op.getError() != null) {
+                           System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                         }else {
+
                             //戻ってくる型は、スクリプト側の記述によって変わる
-                            ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
-                            String ListA[] = new String[160];
-                            //int aaa = ansList.size();
-                            int x=0;
-                            for(int i=0;i < ansList.size();i++){
-                                String a = ansList.get(i).toString();
-                                ListA[x] =a.substring(1,2);//解答
-                                ListA[x+1] =a.substring(4,a.length()-1);//配点
-//                                TextView textView2 = new TextView(GoogleLogin.this);
-//                                textView2.setText("解答:" + ListA[x]+"　配点:"+ListA[x+1]+"/");
-//                                //textView2.setTag(i);
-//                                layout.addView(textView2);
-                                x = x+2;
-                            }
-//                            textView.setText(ListA[0]+ListA[1]+ListA[2]+ListA[3]+ListA[4]+ListA[5]);
-//                            for(int i=61;i < ansList.size();i++){
-//                                String a = ansList.get(i).toString();
-//                                ListA[x] =a;//解答
-//                                TextView textView2 = new TextView(GoogleLogin.this);
-//                                textView2.setText("平均点:" + ListA[x]+"/");
-//                                //textView2.setTag(i);
-//                                layout.addView(textView2);
-//                                x = x+1;
-//                            }
-
-
+                           String s = (String) op.getResponse().get("result");
+                            System.out.println("Script結果"+s);
+                     //       textView.append("Script結果:"+ s+"\n");
                         }
                     }
                 });
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mGoogleScript.onActivityResult(requestCode,resultCode,data);
     }
 }
