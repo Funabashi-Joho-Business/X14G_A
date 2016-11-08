@@ -12,17 +12,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.services.script.model.Operation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener {
 
     private String mEditValue;
-
+    private String mTextValue;
+    private boolean textViewFlag = false;
+    final String[] SCOPES = {
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/script.storage",
+            "https://www.googleapis.com/auth/spreadsheets"};
 
     private GoogleScript mGoogleScript;
 
@@ -44,10 +51,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         syukei.setOnClickListener(this);
         ImageView saiten =(ImageView)findViewById(R.id.imageView6);
         saiten.setOnClickListener(this);
-        TextView text1 = (TextView)findViewById(R.id.textView2);
-        text1.setOnClickListener(this);
-        text1.setTag("textView");
 
+
+
+//    //解答名一覧取得
+//        mGoogleScript = new GoogleScript(this,SCOPES);
+//        //強制的にアカウントを切り替える場合
+//        mGoogleScript.resetAccount();
+//
+//        //送信パラメータ
+//        List<Object> params = new ArrayList<>();
+//        params.add(null);
+//
+//        //ID,ファンクション名,結果コールバック
+//        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
+//                params, new GoogleScript.ScriptListener() {
+//                    @Override
+//                    public void onExecuted(GoogleScript script, Operation op) {
+//                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
+//
+//                        if(op == null || op.getError() != null) {
+//                            System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+//                        }else {
+//                            //戻ってくる型は、スクリプト側の記述によって変わる
+//                            Map<String, Object> r = op.getResponse();
+//                            String s = (String)r.get("result");
+//                            String[] ans = s.split(",", 0);
+//                            int i =0;
+//                            while(i<ans.length){
+//                                setText(ans[i],ans[i+1]);
+//                                i+=2;
+//                            }
+//                        }
+//                    }
+//                });
 
         }
 
@@ -55,46 +92,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
 
-        if(id==R.id.imageView4){
+        if (id == R.id.imageView4) {
+            //Dialogフラグメント
             dialog_newCreate f = new dialog_newCreate();
             f.setOnDialogButtonListener(this);
-            f.show(getSupportFragmentManager(),"");
+            f.show(getSupportFragmentManager(), "");
 
+        }else if(id == R.id.imageView2 && textViewFlag) {   //解答編集画面へ
+            Bundle kaitou = new Bundle();
+            kaitou.putString("textTag",mTextValue); //fragmentにタグを渡す
+        }else if(id == R.id.imageView5) { //集計画面
+        }else if(id == R.id.imageView6) { //スキャナー画面
+            //以下、テキスト選択
         }else{
-            LinearLayout ll = (LinearLayout)findViewById(R.id.layout1);
+            LinearLayout ll = (LinearLayout) findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
-            for(i=0; i<iCount; i++){
+            for (i = 0; i < iCount; i++) {
                 View view;
                 String s;
                 view = ll.getChildAt(i);
                 s = v.getClass().getName();
-                if(s.endsWith("TextView")==true) {
+                if (s.endsWith("TextView") == true) {
                     view.setBackgroundResource(R.drawable.border);
                     v.setBackgroundResource(R.drawable.tap);
+                    textViewFlag = true;
+                    mTextValue = (String)v.getTag();
                 }
             }
-
-
         }
-
     }
 
     @Override
     public void onDialogButton(int value,String editValue) {
         if(value == 0){
             mEditValue = editValue;
-           setText(mEditValue);
-
+           ansCreate(mEditValue);
+        }else{
+            Toast.makeText(this, "作成されませんでした", Toast.LENGTH_LONG).show();
         }
     }
 
     //解答追加
-    public void setText(String textValue){
+    public void setText(String textValue,String gdrive_fileId){
         LinearLayout layout = (LinearLayout)findViewById(R.id.layout1);
         TextView textView = new TextView(this);             //インスタンスの生成(引数はActivityのインスタンス)
-        textView.setTag(textValue);
-        textView.setText(""+textView.getTag());                     //テキストの設定
+        textView.setTag(gdrive_fileId);                      //GoogleDrive上のファイル区別用IDをタグとして設定
+        textView.setText(""+textValue);                     //テキストの内容設定
         int paddingDpt = 30;  // dpを指定
         int paddingDpr = 10;  // dpを指定
         float scale = getResources().getDisplayMetrics().density; //画面のdensityを指定。
@@ -103,77 +147,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView.setPadding(paddingPxt,paddingPxr,paddingPxt,paddingPxr);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         textView.setBackgroundResource(R.drawable.border);  //背景色の設定
+        System.out.println("タグ結果:"+textView.getTag());
         layout.addView(textView);
         textView.setOnClickListener(this);
-        googleLogin(textValue);
+
     }
 
-    //       Drawable border = getResources().getDrawable(R.drawable.border);
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        //必要に応じてアカウントや権限ダイアログの表示
-//        mGoogleScript.onActivityResult(requestCode,resultCode,data);
-//
-//
-//    }
-
-
-//  protected void ans(String textValue) {//解答
-//        mGoogleScript = new GoogleScript(this,SCOPES);
-//        //送信パラメータ
-//        List<Object> params = new ArrayList<>();
-//        params.add(textValue);
-//        //ID,ファンクション名,結果コールバック
-//        mGoogleScript.execute("10Q1chEvLIxSTT3IpaZ_e9_6h2Q8nVpt9dKKorK-oh_BF7zd1eC_2PMiF", "test01",
-//                params, new GoogleScript.ScriptListener() {
-//                    @Override
-//                    public void onExecuted(GoogleScript script, Operation op) {
-//                        //                     TextView textView = (TextView) findViewById(R.id.textMessage);
-//
-//                        if (op == null || op.getError() != null){
-//
-//                            //                       textView.append("Script結果:エラー\n"+op.getError() != null?op.getError().getMessage():"");
-//                        }else {
-//                            //戻ってくる型は、スクリプト側の記述によって変わる
-//                            ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
-//                            String ListA[] = new String[160];
-//                            //int aaa = ansList.size();
-//                            int x=0;
-//                            for(int i=0;i < ansList.size();i++){
-//                                String a = ansList.get(i).toString();
-//                                ListA[x] =a.substring(1,2);//解答
-//                                ListA[x+1] =a.substring(4,a.length()-1);//配点
-////                                TextView textView2 = new TextView(GoogleLogin.this);
-////                                textView2.setText("解答:" + ListA[x]+"　配点:"+ListA[x+1]+"/");
-////                                //textView2.setTag(i);
-////                                layout.addView(textView2);
-//                                x = x+2;
-//                            }
-////                            textView.setText(ListA[0]+ListA[1]+ListA[2]+ListA[3]+ListA[4]+ListA[5]);
-////                            for(int i=61;i < ansList.size();i++){
-////                                String a = ansList.get(i).toString();
-////                                ListA[x] =a;//解答
-////                                TextView textView2 = new TextView(GoogleLogin.this);
-////                                textView2.setText("平均点:" + ListA[x]+"/");
-////                                //textView2.setTag(i);
-////                                layout.addView(textView2);
-////                                x = x+1;
-////                            }
-//
-//
-//                        }
-//                    }
-//                });
-//    }
-
-
-
-    protected void googleLogin (String textvalue){
-        final String[] SCOPES = {
-                "https://www.googleapis.com/auth/drive",
-                "https://www.googleapis.com/auth/script.storage",
-                "https://www.googleapis.com/auth/spreadsheets"};
+    protected void ansCreate (String textValue){
+        String s = "初期値";
 
 
         mGoogleScript = new GoogleScript(this,SCOPES);
@@ -182,10 +163,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //送信パラメータ
         List<Object> params = new ArrayList<>();
-        params.add(textvalue);
+        params.add(textValue);
 
         //ID,ファンクション名,結果コールバック
-        mGoogleScript.execute("10Q1chEvLIxSTT3IpaZ_e9_6h2Q8nVpt9dKKorK-oh_BF7zd1eC_2PMiF", "ans2",
+        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, Operation op) {
@@ -196,18 +177,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }else {
 
                             //戻ってくる型は、スクリプト側の記述によって変わる
-                           String s = (String) op.getResponse().get("result");
-                            System.out.println("Script結果"+s);
+                            Map<String, Object> r = op.getResponse();
+                           String s = (String)r.get("result");
+                            System.out.println("Script:"+s);
                      //       textView.append("Script結果:"+ s+"\n");
                         }
                     }
                 });
-
+        setText(textValue,s);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mGoogleScript.onActivityResult(requestCode,resultCode,data);
+        mGoogleScript.onActivityResult(requestCode, resultCode, data);
     }
 }
+
