@@ -2,6 +2,7 @@ package jp.ac.chiba_fjb.example.googlescript;
 
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -19,6 +20,7 @@ import com.google.api.services.script.model.Operation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.RunnableFuture;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener {
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.imageView4) {
+        if (id == R.id.add) {
             //Dialogフラグメント
             dialog_newCreate f = new dialog_newCreate();
             f.setOnDialogButtonListener(this);
@@ -112,10 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else if(id == R.id.imageView2 && textViewFlag) {   //解答編集画面へ
             Bundle kaitou = new Bundle();
             kaitou.putString("textTag",mTextValue); //fragmentにタグを渡す
-        }else if(id == R.id.imageView5) { //集計画面
-        }else if(id == R.id.imageView6) { //スキャナー画面
-            //以下、テキスト選択
-        }else{
+               }else{
             LinearLayout ll = (LinearLayout) findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
@@ -164,38 +163,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    protected void ansCreate (String textValue){
+    protected void ansCreate (final String textValue){
         String s = "初期値";
-
+        final String value = textValue;
+//インスタンスの取得
+        final Handler mHandler = new Handler(); //Android.os
 
         mGoogleScript = new GoogleScript(this,SCOPES);
         //強制的にアカウントを切り替える場合
-         mGoogleScript.resetAccount();
-
+        mGoogleScript.resetAccount();
         //送信パラメータ
-        List<Object> params = new ArrayList<>();
-        params.add(textValue);
+                List<Object> params = new ArrayList<>();
+                params.add(textValue);
 
         //ID,ファンクション名,結果コールバック
         mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
                 params, new GoogleScript.ScriptListener() {
                     @Override
-                    public void onExecuted(GoogleScript script, Operation op) {
-                     //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                    public void onExecuted(GoogleScript script, final Operation op) {
+                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (op == null || op.getError() != null) {
+                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                } else {
 
-                        if(op == null || op.getError() != null) {
-                           System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
-                        }else {
-
-                            //戻ってくる型は、スクリプト側の記述によって変わる
-                            Map<String, Object> r = op.getResponse();
-                           String s = (String)r.get("result");
-                            System.out.println("Script:"+s);
-                     //       textView.append("Script結果:"+ s+"\n");
-                        }
+                                    //戻ってくる型は、スクリプト側の記述によって変わる
+                                    Map<String, Object> r = op.getResponse();
+                                    String s = (String) r.get("result");
+                                    System.out.println("Script:" + s);
+                                    setText(value, s);
+                                }
+                            }
+                        });
                     }
-                });
-        setText(textValue,s);
+        });
     }
 
     @Override

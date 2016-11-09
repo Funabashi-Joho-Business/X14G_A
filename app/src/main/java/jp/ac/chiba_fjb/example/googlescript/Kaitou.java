@@ -18,7 +18,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import static com.example.x14g008.magonote.R.id.textView;
 import static java.security.AccessController.getContext;
 
 
