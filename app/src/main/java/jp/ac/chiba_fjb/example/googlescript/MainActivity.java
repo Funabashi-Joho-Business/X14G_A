@@ -41,18 +41,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.main);
 
 
-        ImageView edit =(ImageView)findViewById(R.id.imageView2);
+        ImageView edit =(ImageView)findViewById(R.id.edit);
         edit.setOnClickListener(this);
-        ImageView copy =(ImageView)findViewById(R.id.imageView3);
+        ImageView copy =(ImageView)findViewById(R.id.copy);
         copy.setOnClickListener(this);
-        ImageView add =(ImageView)findViewById(R.id.imageView4);
+        ImageView add =(ImageView)findViewById(R.id.add);
         add.setOnClickListener(this);
-        ImageView syukei =(ImageView)findViewById(R.id.imageView5);
+        ImageView syukei =(ImageView)findViewById(R.id.syukei);
         syukei.setOnClickListener(this);
-        ImageView saiten =(ImageView)findViewById(R.id.imageView6);
+        ImageView saiten =(ImageView)findViewById(R.id.saiten);
         saiten.setOnClickListener(this);
-
-
 
 //    //解答名一覧取得
 //        mGoogleScript = new GoogleScript(this,SCOPES);
@@ -97,6 +95,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dialog_newCreate f = new dialog_newCreate();
             f.setOnDialogButtonListener(this);
             f.show(getSupportFragmentManager(), "");
+
+         }else if(v.getId()==R.id.edit) {
+
+                Intent intent = new Intent();
+                intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.Kaitou");
+                startActivity(intent);
+
+        }else if(v.getId()==R.id.syukei){
+
+                Intent intent = new Intent();
+                intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.Syukei");
+                startActivity(intent);
+
 
         }else if(id == R.id.imageView2 && textViewFlag) {   //解答編集画面へ
             Bundle kaitou = new Bundle();

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDECEC">
@@ -32,8 +31,7 @@
             android:layout_marginTop="0dp"
             android:layout_height="60dp"
             android:fontFamily="sans-serif"
-            android:textAlignment="center"
-            tools:ignore="RtlSymmetry,SpUsage,UnusedAttribute" />
+            android:textAlignment="center" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,7 +45,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             app:srcCompat="@drawable/edit"
-            android:id="@+id/imageView2"
+            android:id="@+id/edit"
             android:layout_weight="1"
             android:layout_marginRight="15dp"/>
 
@@ -55,7 +53,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             app:srcCompat="@drawable/copy"
-            android:id="@+id/imageView3"
+            android:id="@+id/copy"
             android:layout_weight="1"
             android:layout_marginRight="15dp"/>
 
@@ -63,7 +61,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             app:srcCompat="@drawable/sinki"
-            android:id="@+id/imageView4"
+            android:id="@+id/add"
             android:layout_weight="1"
             android:layout_marginRight="15dp"
             android:padding="3dp"/>
@@ -81,8 +79,7 @@
             android:orientation="vertical"
             android:id="@+id/layout1"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            tools:ignore="ScrollViewSize">
+            android:paddingRight="10dp">
 
         </LinearLayout>
     </ScrollView>
@@ -101,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             app:srcCompat="@drawable/syukei"
-            android:id="@+id/imageView5"
+            android:id="@+id/syukei"
             android:layout_weight="1"
             android:paddingBottom="5dp"/>
 
@@ -109,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             app:srcCompat="@drawable/saiten"
-            android:id="@+id/imageView6"
+            android:id="@+id/saiten"
             android:layout_weight="1"
             android:paddingBottom="5dp"/>
     </LinearLayout>

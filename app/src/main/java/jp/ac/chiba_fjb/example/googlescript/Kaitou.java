@@ -1,5 +1,7 @@
 package jp.ac.chiba_fjb.example.googlescript;
 
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +18,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import static com.example.x14g008.magonote.R.id.textView;
+import static java.security.AccessController.getContext;
 
-public class Kaitou extends AppCompatActivity implements View.OnClickListener {
 
+public class Kaitou extends AppCompatActivity implements View.OnClickListener, BlankFragment.OnDialogButtonListener {
+    Intent intent = new Intent();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,21 +32,22 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener {
 
         setContentView(R.layout.kaitou);
 
-        String[][] cc = {{"ア","イ","ウ","エ","オ","カ","キ","ク","ケ","コ"},{"a","b","c","d","e","f","g","h","i","j"}};
+        String[][] cc = {{"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ"}, {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}};
 
 
-
-
-        LinearLayout layout = (LinearLayout)findViewById(R.id.layout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
         layout.setBackgroundResource(R.drawable.kborder);
 
-        ImageView camera = (ImageView)findViewById(R.id.imageView4);
+        TextView testtitle = (TextView)findViewById(R.id.testtitle);
+        testtitle.setText("テスト名");
+
+        ImageView camera = (ImageView) findViewById(R.id.camera);
         camera.setOnClickListener(this);
 
-        ImageView ok = (ImageView)findViewById(R.id.imageView5);
+        ImageView ok = (ImageView) findViewById(R.id.editok);
         ok.setOnClickListener(this);
 
-        for(int a = 0;a<8;a++) {
+        for (int a = 0; a < 8; a++) {
 
             LinearLayout toisetumon = new LinearLayout(this);
             toisetumon.setBackgroundResource(R.drawable.kborder);
@@ -57,8 +63,8 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener {
             int pd = 10;
             float scale = getResources().getDisplayMetrics().density;
             int p = (int) (pd * scale);
-            sb.setPadding(p,p,p,p);
-            sb.setText(""+(a+1));
+            sb.setPadding(p, p, p, p);
+            sb.setText("" + (a + 1));
             layout.addView(sb);
 
             for (int i = 0; i < 10; i++) {
@@ -78,7 +84,7 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener {
                 setumon.addView(b);
 
                 TableLayout kaitou = new TableLayout(this);
-                kaitou.setTag(""+a+i);
+                kaitou.setTag("" + a + i);
 
                 TableRow tableRow = new TableRow(this);
                 TableRow tableRow2 = new TableRow(this);
@@ -87,7 +93,7 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener {
 
                     TextView text = new TextView(this);
                     text.setOnClickListener(this);
-                    text.setTag(""+a+i);
+                    text.setTag("" + a + i);
                     text.setText(cc[0][j]);
                     text.setBackgroundResource(R.drawable.kborder);
                     text.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
@@ -126,28 +132,41 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener {
         }
 
 
-
     }
 
     @Override
     public void onClick(View v) {
         String s;
         s = v.getClass().getName();
-    if(s.endsWith("TextView")==true){
-        TableLayout tl = (TableLayout)v.getParent().getParent();
-        View view;
-        TableRow tr;
-        for(int j = 0;j<2;j++) {
-            tr = (TableRow) tl.getChildAt(j);
-            for (int i = 0; i < 5; i++) {
-                view = tr.getChildAt(i);
-                view.setBackgroundResource(R.drawable.kborder);
-                v.setBackgroundResource(R.drawable.btap);
+        if (s.endsWith("TextView") == true) {
+            TableLayout tl = (TableLayout) v.getParent().getParent();
+            View view;
+            TableRow tr;
+            for (int j = 0; j < 2; j++) {
+                tr = (TableRow) tl.getChildAt(j);
+                for (int i = 0; i < 5; i++) {
+                    view = tr.getChildAt(i);
+                    view.setBackgroundResource(R.drawable.kborder);
+                    v.setBackgroundResource(R.drawable.btap);
+                }
             }
+        } else if (v.getId() == R.id.editok) {
+            //フラグメントのインスタンスを作成
+            BlankFragment f = new BlankFragment();
+            //ダイアログのボタンが押された場合の動作
+            f.setOnDialogButtonListener(this);
+            f.show(getFragmentManager(), "");
+
+
         }
-    }else if(v.getId()==R.id.imageView5){
-        MyDialog dialog = new MyDialog();
-        dialog.show(getFragmentManager(), "tag");
+
+
+
     }
+
+    @Override
+    public void onDialogButton(int value) {
+        intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.MainActivity");
+        startActivity(intent);
     }
 }
