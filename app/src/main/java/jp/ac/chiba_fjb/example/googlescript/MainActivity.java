@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "https://www.googleapis.com/auth/spreadsheets"};
 
     private GoogleScript mGoogleScript;
+    private Handler mHandler;
 
 
     @Override
@@ -41,52 +42,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
+        //インスタンスの取得
+        mHandler = new Handler(); //Android.os
 
-
-        ImageView edit =(ImageView)findViewById(R.id.edit);
+        ImageView edit = (ImageView) findViewById(R.id.edit);
         edit.setOnClickListener(this);
-        ImageView copy =(ImageView)findViewById(R.id.copy);
+        ImageView copy = (ImageView) findViewById(R.id.copy);
         copy.setOnClickListener(this);
-        ImageView add =(ImageView)findViewById(R.id.add);
+        ImageView add = (ImageView) findViewById(R.id.add);
         add.setOnClickListener(this);
-        ImageView syukei =(ImageView)findViewById(R.id.syukei);
+        ImageView syukei = (ImageView) findViewById(R.id.syukei);
         syukei.setOnClickListener(this);
-        ImageView saiten =(ImageView)findViewById(R.id.saiten);
+        ImageView saiten = (ImageView) findViewById(R.id.saiten);
         saiten.setOnClickListener(this);
 
-//    //解答名一覧取得
-//        mGoogleScript = new GoogleScript(this,SCOPES);
-//        //強制的にアカウントを切り替える場合
-//        mGoogleScript.resetAccount();
-//
-//        //送信パラメータ
-//        List<Object> params = new ArrayList<>();
-//        params.add(null);
-//
-//        //ID,ファンクション名,結果コールバック
-//        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
-//                params, new GoogleScript.ScriptListener() {
-//                    @Override
-//                    public void onExecuted(GoogleScript script, Operation op) {
-//                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
-//
-//                        if(op == null || op.getError() != null) {
-//                            System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
-//                        }else {
-//                            //戻ってくる型は、スクリプト側の記述によって変わる
-//                            Map<String, Object> r = op.getResponse();
-//                            String s = (String)r.get("result");
-//                            String[] ans = s.split(",", 0);
-//                            int i =0;
-//                            while(i<ans.length){
-//                                setText(ans[i],ans[i+1]);
-//                                i+=2;
-//                            }
-//                        }
-//                    }
-//                });
+        //解答名一覧取得
+        mGoogleScript = new GoogleScript(this, SCOPES);
+        //強制的にアカウントを切り替える場合
+        mGoogleScript.resetAccount();
 
-        }
+        //送信パラメータ
+        List<Object> params = new ArrayList<>();
+        params.add(null);
+
+        //ID,ファンクション名,結果コールバック
+        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
+                params, new GoogleScript.ScriptListener() {
+                    @Override
+                    public void onExecuted(GoogleScript script, final Operation op) {
+                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (op == null || op.getError() != null) {
+                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                } else {
+                                    //戻ってくる型は、スクリプト側の記述によって変わる
+                                    Map<String, Object> r = op.getResponse();
+                                    ArrayList<Object> s = new ArrayList<Object>();
+                                    s = (ArrayList<Object>) r.get("result");
+                                    int i = 0;
+                                    while (i < s.size()) {
+                                        System.out.println("解答名："+s.get(i)+"\t解答ID："+s.get(i+1));
+                                        setText(""+s.get(i), ""+s.get(i+1));
+                                        i += 2;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+    }
 
     @Override
     public void onClick(View v) {
@@ -99,22 +105,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             f.show(getSupportFragmentManager(), "");
 
          }else if(v.getId()==R.id.edit) {
-
-                Intent intent = new Intent();
-                intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.Kaitou");
-                startActivity(intent);
-
+            Intent intent = new Intent();
+            intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.Kaitou");
+            startActivity(intent);
         }else if(v.getId()==R.id.syukei){
-
                 Intent intent = new Intent();
                 intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.Syukei");
                 startActivity(intent);
-
-
         }else if(id == R.id.imageView2 && textViewFlag) {   //解答編集画面へ
             Bundle kaitou = new Bundle();
             kaitou.putString("textTag",mTextValue); //fragmentにタグを渡す
-               }else{
+        }else{
             LinearLayout ll = (LinearLayout) findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
@@ -166,8 +167,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void ansCreate (final String textValue){
         String s = "初期値";
         final String value = textValue;
-//インスタンスの取得
-        final Handler mHandler = new Handler(); //Android.os
 
         mGoogleScript = new GoogleScript(this,SCOPES);
         //強制的にアカウントを切り替える場合
@@ -177,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 params.add(textValue);
 
         //ID,ファンクション名,結果コールバック
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
+        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ans2",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
@@ -188,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if (op == null || op.getError() != null) {
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
-
                                     //戻ってくる型は、スクリプト側の記述によって変わる
                                     Map<String, Object> r = op.getResponse();
                                     String s = (String) r.get("result");
