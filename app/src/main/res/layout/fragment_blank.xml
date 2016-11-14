@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.x14g008.magonote.BlankFragment">
+    tools:context="jp.ac.chiba_fjb.example.googlescript.BlankFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -36,18 +36,19 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/yes"
-                android:id="@+id/dialogyes"
+                app:srcCompat="@drawable/no"
+                android:id="@+id/dialogNo"
                 android:layout_weight="1"
                 android:padding="5dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/no"
-                android:id="@+id/dialogNo"
+                app:srcCompat="@drawable/yes"
+                android:id="@+id/dialogyes"
                 android:layout_weight="1"
                 android:padding="5dp" />
+
         </LinearLayout>
     </LinearLayout>
 

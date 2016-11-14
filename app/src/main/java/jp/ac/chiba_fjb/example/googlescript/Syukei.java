@@ -12,8 +12,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 
 public class Syukei  extends AppCompatActivity {
 
@@ -28,7 +26,7 @@ public class Syukei  extends AppCompatActivity {
         /*
         */
 
-        TableLayout tlayout = (TableLayout)findViewById(R.id.tlayout);
+        TableLayout tlayout = (TableLayout) findViewById(R.id.tlayout);
         tlayout.setBackgroundResource(R.drawable.kborder);
 
         for (int i = 0; i < 30; i++) {
@@ -44,11 +42,9 @@ public class Syukei  extends AppCompatActivity {
                 float scale = getResources().getDisplayMetrics().density;
                 int s = 5;  // dpを指定
                 int ss = (int) (s * scale);
-                textView.setPadding(ss,ss,ss,ss);
+                textView.setPadding(ss, ss, ss, ss);
 
-                textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1));
-
-
+                textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
 
                 switch (j) {
@@ -64,13 +60,14 @@ public class Syukei  extends AppCompatActivity {
                         break;
                 }
 
-                tableRow.addView(textView,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tableRow.addView(textView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             }
-                tlayout.addView(tableRow, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            tlayout.addView(tableRow, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
 
         }
 
     }
+
 }

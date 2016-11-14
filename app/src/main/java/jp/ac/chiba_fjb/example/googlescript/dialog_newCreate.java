@@ -18,7 +18,7 @@ import android.widget.EditText;
  */
 public class dialog_newCreate extends DialogFragment implements View.OnClickListener {
 
-   static String aaa = "aaa";
+    static String aaa = "aaa";
 
 
     private Bundle flag;

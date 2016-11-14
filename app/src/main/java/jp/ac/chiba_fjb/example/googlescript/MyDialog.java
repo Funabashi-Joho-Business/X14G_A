@@ -32,8 +32,7 @@ public class MyDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View content = inflater.inflate(R.layout.dialog, null);
-        content.setPadding(50,400,50,0);
+        content.setPadding(50, 400, 50, 0);
         return content;
     }
 }
-

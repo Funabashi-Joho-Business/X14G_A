@@ -3,9 +3,13 @@ package jp.ac.chiba_fjb.example.googlescript;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,6 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.api.services.script.model.Operation;
+
+import org.opencv.android.InstallCallbackInterface;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private GoogleScript mGoogleScript;
     private Handler mHandler;
+    private Object savedInstanceState;
 
 
     @Override
@@ -43,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         //インスタンスの取得
+        savedInstanceState = (Bundle) this.savedInstanceState;
         mHandler = new Handler(); //Android.os
 
         ImageView edit = (ImageView) findViewById(R.id.edit);
@@ -96,25 +107,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
         int id = v.getId();
-
-        if (id == R.id.add) {
-            //Dialogフラグメント
+        if(textViewFlag)
+            intent.putExtra("mTextValue",mTextValue);
+        if(id==R.id.add) { //dialogフラグメントへ、解答作成
             dialog_newCreate f = new dialog_newCreate();
             f.setOnDialogButtonListener(this);
             f.show(getSupportFragmentManager(), "");
-
-         }else if(v.getId()==R.id.edit) {
-            Intent intent = new Intent();
-            intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.Kaitou");
+        }else if(id==R.id.syukei) { //集計確認
+            intent.setClassName(this, "jp.ac.chiba_fjb.example.googlescript.Syukei");
             startActivity(intent);
-        }else if(v.getId()==R.id.syukei){
-                Intent intent = new Intent();
-                intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.Syukei");
-                startActivity(intent);
-        }else if(id == R.id.imageView2 && textViewFlag) {   //解答編集画面へ
-            Bundle kaitou = new Bundle();
-            kaitou.putString("textTag",mTextValue); //fragmentにタグを渡す
+        }else if(id==R.id.edit && textViewFlag){ //解答編集
+            intent.setClassName(this, "jp.ac.chiba_fjb.example.googlescript.Kaitou");
+            startActivity(intent);
+        }else if(id == R.id.saiten) {   //カメラ起動
+            setContentView(R.layout.activity_main);
+            if (savedInstanceState == null){
+                Fragment f = getSupportFragmentManager().getFragment(new Bundle(),CameraFragment.class.getName());
+                if(f == null) {
+                    f = new CameraFragment();
+                }
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.add(R.id.activity_main
+                        ,f,CameraFragment.class.getName());
+                ft.commit();
+            }
+            OpenCVLoader.initDebug();
         }else{
             LinearLayout ll = (LinearLayout) findViewById(R.id.layout1);
             int i, iCount;
@@ -128,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     view.setBackgroundResource(R.drawable.border);
                     v.setBackgroundResource(R.drawable.tap);
                     textViewFlag = true;
-                    mTextValue = (String)v.getTag();
+                    mTextValue = (String) v.getTag();
                 }
             }
         }
@@ -203,6 +222,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mGoogleScript.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+    }
+
+
+    public void onManagerConnected(int status) {
+        switch (status) {
+            case LoaderCallbackInterface.SUCCESS:
+            {
+                Log.i("OpenCV", "OpenCV loaded successfully");
+                Mat imageMat = new Mat();
+            } break;
+            default:
+            {
+                //super.onManagerConnected(status);
+            } break;
+        }
+
+    }
+
+    public void onPackageInstall(int operation, InstallCallbackInterface callback) {
+
     }
 }
 

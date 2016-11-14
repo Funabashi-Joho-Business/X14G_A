@@ -18,11 +18,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import static java.security.AccessController.getContext;
-
 
 public class Kaitou extends AppCompatActivity implements View.OnClickListener, BlankFragment.OnDialogButtonListener {
-    Intent intent = new Intent();
+    Intent intent = getIntent();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +35,7 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
         layout.setBackgroundResource(R.drawable.kborder);
 
-        TextView testtitle = (TextView)findViewById(R.id.testtitle);
+        TextView testtitle = (TextView) findViewById(R.id.testtitle);
         testtitle.setText("テスト名");
 
         ImageView camera = (ImageView) findViewById(R.id.camera);
@@ -158,7 +156,6 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
 
 
         }
-
 
 
     }
