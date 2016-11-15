@@ -1,6 +1,7 @@
 package jp.ac.chiba_fjb.example.googlescript;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -31,9 +32,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.RunnableFuture;
 
+import static java.security.AccessController.getContext;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener {
 
+    private String selectText;
     private String mEditValue;
     private String mTextValue;
     private boolean textViewFlag = false;
@@ -67,50 +71,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView saiten = (ImageView) findViewById(R.id.saiten);
         saiten.setOnClickListener(this);
 
-        //解答名一覧取得
-        mGoogleScript = new GoogleScript(this, SCOPES);
-        //強制的にアカウントを切り替える場合
-        mGoogleScript.resetAccount();
-
-        //送信パラメータ
-        List<Object> params = new ArrayList<>();
-        params.add(null);
-
-        //ID,ファンクション名,結果コールバック
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
-                params, new GoogleScript.ScriptListener() {
-                    @Override
-                    public void onExecuted(GoogleScript script, final Operation op) {
-                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (op == null || op.getError() != null) {
-                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
-                                } else {
-                                    //戻ってくる型は、スクリプト側の記述によって変わる
-                                    Map<String, Object> r = op.getResponse();
-                                    ArrayList<Object> s = new ArrayList<Object>();
-                                    s = (ArrayList<Object>) r.get("result");
-                                    int i = 0;
-                                    while (i < s.size()) {
-                                        System.out.println("解答名："+s.get(i)+"\t解答ID："+s.get(i+1));
-                                        setText(""+s.get(i), ""+s.get(i+1));
-                                        i += 2;
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
+        listOutput();
     }
 
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
         int id = v.getId();
-        if(textViewFlag)
-            intent.putExtra("mTextValue",mTextValue);
         if(id==R.id.add) { //dialogフラグメントへ、解答作成
             dialog_newCreate f = new dialog_newCreate();
             f.setOnDialogButtonListener(this);
@@ -121,35 +88,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else if(id==R.id.edit && textViewFlag){ //解答編集
             intent.setClassName(this, "jp.ac.chiba_fjb.example.googlescript.Kaitou");
             startActivity(intent);
-        }else if(id == R.id.saiten) {   //カメラ起動
+        }else if(id == R.id.saiten && textViewFlag) {   //カメラ起動
             setContentView(R.layout.activity_main);
+            TextView answerName = (TextView)findViewById(R.id.AnswerName);
+            answerName.setText(selectText);
             if (savedInstanceState == null){
                 Fragment f = getSupportFragmentManager().getFragment(new Bundle(),CameraFragment.class.getName());
                 if(f == null) {
                     f = new CameraFragment();
                 }
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.activity_main
+                ft.add(R.id.CameraView
                         ,f,CameraFragment.class.getName());
                 ft.commit();
             }
             OpenCVLoader.initDebug();
-        }else{
+        }else if(v.getClass()==TextView.class){
+            textViewFlag = true;
+            selectText = ((TextView)v).getText().toString();
             LinearLayout ll = (LinearLayout) findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
             for (i = 0; i < iCount; i++) {
-                View view;
-                String s;
-                view = ll.getChildAt(i);
-                s = v.getClass().getName();
+                View view =ll.getChildAt(i);
+                String s = v.getClass().getName();
                 if (s.endsWith("TextView") == true) {
                     view.setBackgroundResource(R.drawable.border);
                     v.setBackgroundResource(R.drawable.tap);
-                    textViewFlag = true;
+                    //System.out.println(selectText.getText().toString());
                     mTextValue = (String) v.getTag();
                 }
-            }
+           }
         }
     }
 
@@ -253,6 +222,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onPackageInstall(int operation, InstallCallbackInterface callback) {
 
+    }
+
+    public void listOutput(){
+        //解答名一覧取得
+        mGoogleScript = new GoogleScript(this, SCOPES);
+        //強制的にアカウントを切り替える場合
+        mGoogleScript.resetAccount();
+
+        //送信パラメータ
+        List<Object> params = new ArrayList<>();
+        params.add(null);
+
+        //ID,ファンクション名,結果コールバック
+        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
+                params, new GoogleScript.ScriptListener() {
+                    @Override
+                    public void onExecuted(GoogleScript script, final Operation op) {
+                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (op == null || op.getError() != null) {
+                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                } else {
+                                    //戻ってくる型は、スクリプト側の記述によって変わる
+                                    Map<String, Object> r = op.getResponse();
+                                    ArrayList<Object> s = new ArrayList<Object>();
+                                    s = (ArrayList<Object>) r.get("result");
+                                    int i = 0;
+                                    while (i < s.size()) {
+                                        System.out.println("解答名："+s.get(i)+"\t解答ID："+s.get(i+1));
+                                        setText(""+s.get(i), ""+s.get(i+1));
+                                        i += 2;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
     }
 }
 

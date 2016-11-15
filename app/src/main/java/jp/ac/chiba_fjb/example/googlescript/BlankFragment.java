@@ -39,7 +39,7 @@ public class BlankFragment extends DialogFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         //リスナーに登録されているメソッドを呼び出す
-        if(mListener != null) {
+        if (mListener != null) {
             if (v.getId() == R.id.dialogyes)
                 mListener.onDialogButton(0);
             else
@@ -49,67 +49,15 @@ public class BlankFragment extends DialogFragment implements View.OnClickListene
         getDialog().cancel();
     }
 
-    public interface OnDialogButtonListener{
+    public interface OnDialogButtonListener {
         void onDialogButton(int value);
     }
+
     //インタフェイスのインスタンス保存用
     OnDialogButtonListener mListener;
 
     //ボタン動作のインスタンスを受け取る
-    public void setOnDialogButtonListener(OnDialogButtonListener listener){
-        mListener =  listener;
-    }
-
-    /**
-     * A simple {@link Fragment} subclass.
-     */
-    public static class BlankFrament extends DialogFragment implements View.OnClickListener {
-
-
-        public BlankFrament() {
-            // Required empty public constructor
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Dialog d = super.onCreateDialog(savedInstanceState);
-            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            return d;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            View view = inflater.inflate(R.layout.fragment_blank, container, false);
-            view.findViewById(R.id.dialogyes).setOnClickListener(this);
-            view.findViewById(R.id.dialogNo).setOnClickListener(this);
-            return view;
-        }
-
-        @Override
-        public void onClick(View v) {
-            //リスナーに登録されているメソッドを呼び出す
-            if(mListener != null) {
-                if (v.getId() == R.id.dialogyes)
-                    mListener.onDialogButton(0);
-                else
-                    mListener.onDialogButton(1);
-            }
-            //ダイアログを閉じる
-            getDialog().cancel();
-        }
-
-        public interface OnDialogButtonListener{
-            void onDialogButton(int value);
-        }
-        //インタフェイスのインスタンス保存用
-        jp.ac.chiba_fjb.example.googlescript.BlankFragment.OnDialogButtonListener mListener;
-
-        //ボタン動作のインスタンスを受け取る
-        public void setOnDialogButtonListener(jp.ac.chiba_fjb.example.googlescript.BlankFragment.OnDialogButtonListener listener){
-            mListener =  listener;
-        }
-
+    public void setOnDialogButtonListener(OnDialogButtonListener listener) {
+        mListener = listener;
     }
 }
