@@ -1,20 +1,17 @@
 package jp.ac.chiba_fjb.example.googlescript;
 
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,9 +27,6 @@ import org.opencv.core.Mat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.RunnableFuture;
-
-import static java.security.AccessController.getContext;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener {
@@ -98,8 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     f = new CameraFragment();
                 }
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.CameraView
+                ft.replace(R.id.CameraView
                         ,f,CameraFragment.class.getName());
+                ft.addToBackStack(null);
                 ft.commit();
             }
             OpenCVLoader.initDebug();
@@ -261,6 +256,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                     }
                 });
+    }
+    @Override
+    public void onBackPressed() {
+        int backStackCnt = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackCnt != 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        else
+            super.onBackPressed();
     }
 }
 

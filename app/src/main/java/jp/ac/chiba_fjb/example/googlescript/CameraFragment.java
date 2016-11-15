@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,6 +31,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private CameraPreview mCamera;
     private SeekBar mSeekBar;
     private SaveListener mSaveListener;
+    private int mVisibility;
+    private boolean mStopFlag;
 
     static interface SaveListener{
         public void onSave(Bitmap bitmap);
@@ -123,28 +124,47 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     @Override
     public void onResume() {
         super.onResume();
+        mStopFlag = false;
+        //フレームスタイルの変更
+        View view = getActivity().getWindow().getDecorView();
+        mVisibility = view.getSystemUiVisibility();
+        view.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        );
+
         mCamera.setLight(true);
     }
 
     @Override
     public void onPause() {
+        mStopFlag = true;
+        //フレームスタイルの復元
+        View view = getActivity().getWindow().getDecorView();
+        view.setSystemUiVisibility(mVisibility );
+
         mCamera.setLight(false);
 
-        if(mThread != null)
-            while(mThread.isAlive()) {
+        if(mThread != null) {
+            while (mThread.isAlive()) {
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+        }
         super.onPause();
     }
 
     private Thread mThread;
     @Override
     public void onSave(final Bitmap bitmap) {
-        if(bitmap == null)
+        if(mStopFlag || bitmap == null)
             return;
         if(mThread != null && mThread.isAlive())
             return;
@@ -163,8 +183,11 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            TextView textView = (TextView) getView().findViewById(R.id  .textView2);
-                            textView.setText(String.format("検出マーク数: %d",info.markerCount));
+                            if(getView()!=null){
+                                TextView textView = (TextView) getView().findViewById(R.id  .textView2);
+                                if(textView != null)
+                                    textView.setText(String.format("検出マーク数: %d",info.markerCount));
+                            }
                            }
                     });
                 }
