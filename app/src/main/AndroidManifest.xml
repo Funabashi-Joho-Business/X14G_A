@@ -22,7 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="jp.ac.chiba_fjb.example.googlescript.CameraActivity"></activity>
         <activity android:name="jp.ac.chiba_fjb.example.googlescript.Syukei"></activity>
         <activity android:name="jp.ac.chiba_fjb.example.googlescript.Kaitou"></activity>
     </application>
