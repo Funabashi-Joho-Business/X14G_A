@@ -41,13 +41,15 @@
         android:layout_gravity="right"
         android:layout_marginTop="10dp">
 
+
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
-            app:srcCompat="@drawable/edit"
-            android:id="@+id/edit"
+            app:srcCompat="@drawable/trash"
+            android:id="@+id/trash"
             android:layout_weight="1"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp"
+            android:padding="2dp" />
 
         <ImageView
             android:layout_width="32dp"
@@ -55,7 +57,8 @@
             app:srcCompat="@drawable/copy"
             android:id="@+id/copy"
             android:layout_weight="1"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp"
+            android:padding="3dp" />
 
         <ImageView
             android:layout_width="32dp"
@@ -64,7 +67,16 @@
             android:id="@+id/add"
             android:layout_weight="1"
             android:layout_marginRight="15dp"
-            android:padding="3dp"/>
+            android:padding="3dp" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:srcCompat="@drawable/edit"
+            android:id="@+id/edit"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            android:paddingBottom="2dp" />
     </LinearLayout>
 
     <ScrollView

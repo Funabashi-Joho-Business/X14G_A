@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
 /**
@@ -234,7 +233,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     public void onReaded(MarkReader.MarkerInfo info,MarkReader.AnserData anserData){
 
         //配列に格納するメソッドへ引き渡す
-        MainActivity.anserSend(anserData.numbers,anserData.ansers);
+//        MainActivity.anserSend(anserData.numbers,anserData.ansers);
 
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("用紙角度 %f\n誤差角度 %f\n(%04d,%04d) %f\n(%04d,%04d) %f\n(%04d,%04d) %f\n(%04d,%04d) %f\n",
