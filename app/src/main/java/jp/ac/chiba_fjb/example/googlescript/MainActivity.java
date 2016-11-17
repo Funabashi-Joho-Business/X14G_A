@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 } else {
-                    if (i == 9) {//すべて空白
+                    if (i == 9) {//無回答の場合
                         sendData.add(" ");
                         break;
                     }
@@ -131,11 +131,14 @@ public class MainActivity extends AppCompatActivity {
                             g5 = String.valueOf(a);
                         case 9:
                             g6 = String.valueOf(a);
-
                     }
                 }
-
             }
         }
+        String sNo = s1+s2+s3;
+        String gNo = g1+g2+g3+g4+g5+g6;
+        sendData.add(gNo);
+        sendData.add(sNo);
+        
     }
 }
