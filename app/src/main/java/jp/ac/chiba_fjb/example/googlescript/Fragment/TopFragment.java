@@ -81,16 +81,18 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             f.setOnDialogButtonListener(this);
             f.show(getFragmentManager(), "");
         }else if(id==R.id.syukei) { //集計確認
-            intent.setClassName(getContext(),"jp.ac.chiba_fjb.example.googlescript.Fragment.SyukeiFragment");
-            startActivity(intent);
+            ft.replace(R.id.mainLayout,new SyukeiFragment(),SyukeiFragment.class.getName());
+            ft.addToBackStack(null);
+            ft.commit();
         }else if(id==R.id.edit && textViewFlag){ //解答編集
-            intent.setClassName(getContext(), "jp.ac.chiba_fjb.example.googlescript.Fragment.KaitouFragment");
-            startActivity(intent);
+            ft.replace(R.id.mainLayout,new KaitouFragment(),KaitouFragment.class.getName());
+            ft.addToBackStack(null);
+            ft.commit();
         }else if(id == R.id.saiten && textViewFlag) {   //カメラ起動
             //(R.layout.activity_main);
             //TextView answerName = (TextView)view.findViewById(R.id.AnswerName);
             //answerName.setText(selectText);
-            Fragment f = getFragmentManager().getFragment(new Bundle(), CameraFragment.class.getName());
+//            Fragment f = getFragmentManager().getFragment(new Bundle(), CameraFragment.class.getName());
             ft.replace(R.id.mainLayout, new CameraFragment(), CameraFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();

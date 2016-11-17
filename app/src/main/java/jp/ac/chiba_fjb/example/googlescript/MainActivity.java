@@ -1,7 +1,9 @@
 package jp.ac.chiba_fjb.example.googlescript;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -34,6 +36,15 @@ public class MainActivity extends AppCompatActivity {
         } else
             super.onBackPressed();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        for(Fragment f : getSupportFragmentManager().getFragments())
+                        f. onActivityResult(requestCode, resultCode, data);
+
+                        super.onActivityResult(requestCode, resultCode, data);
+            }
 
     public static void anserSend(List<Boolean> numbers, List<Boolean> ansers) {
         ArrayList<String> sendData = new ArrayList<String>();

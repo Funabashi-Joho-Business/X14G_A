@@ -180,7 +180,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
                 final MarkReader.MarkerInfo info = MarkReader.getMarker(bitmap,limit);
                 final MarkReader.AnserData anserData = MarkReader.getAnser(bitmap,info,limit);
-
+                bitmap.recycle();
                 if(info.markerCount < 4)
                 {
                     getActivity().runOnUiThread(new Runnable() {
