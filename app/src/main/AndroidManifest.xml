@@ -22,8 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="jp.ac.chiba_fjb.example.googlescript.Syukei"></activity>
-        <activity android:name="jp.ac.chiba_fjb.example.googlescript.Kaitou"></activity>
+        <activity android:name="jp.ac.chiba_fjb.example.googlescript.Fragment.Syukei"></activity>
+        <activity android:name="jp.ac.chiba_fjb.example.googlescript.Fragment.Kaitou"></activity>
     </application>
 
 </manifest>
