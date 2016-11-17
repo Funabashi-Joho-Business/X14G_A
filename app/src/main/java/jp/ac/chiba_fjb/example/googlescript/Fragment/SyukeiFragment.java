@@ -1,12 +1,13 @@
 package jp.ac.chiba_fjb.example.googlescript.Fragment;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -15,28 +16,22 @@ import android.widget.TextView;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
 
-public class Syukei  extends AppCompatActivity {
+public class SyukeiFragment extends Fragment {
 
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v =  inflater.inflate(R.layout.syukei, container, false);
+ //       requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        setContentView(R.layout.syukei);
-
-        /*
-        */
-
-        TableLayout tlayout = (TableLayout) findViewById(R.id.tlayout);
+        TableLayout tlayout = (TableLayout)v.findViewById(R.id.tlayout);
         tlayout.setBackgroundResource(R.drawable.kborder);
 
         for (int i = 0; i < 30; i++) {
-            TableRow tableRow = new TableRow(this);
+            TableRow tableRow = new TableRow(getContext());
             for (int j = 0; j < 3; j++) {
 
 
-                TextView textView = new TextView(this);
+                TextView textView = new TextView(getContext());
 
                 textView.setBackgroundResource(R.drawable.kborder);
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
@@ -69,7 +64,7 @@ public class Syukei  extends AppCompatActivity {
 
 
         }
-
+    return v;
     }
 
 }

@@ -2,8 +2,6 @@ package jp.ac.chiba_fjb.example.googlescript.Fragment;
 
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -20,12 +18,7 @@ import jp.ac.chiba_fjb.example.googlescript.R;
  */
 public class dialog_newCreate extends DialogFragment implements View.OnClickListener {
 
-    static String aaa = "aaa";
-
-
-    private Bundle flag;
     private EditText mEditText;
-
 
     public dialog_newCreate() {
         // Required empty public constructor
@@ -69,13 +62,10 @@ public class dialog_newCreate extends DialogFragment implements View.OnClickList
     public void onClick(View v) {
         //リスナーに登録されているメソッドを呼び出す
         if(mListener != null) {
-            if (v.getId() == R.id.button2){
+            if (v.getId() == R.id.button2)
                 mListener.onDialogButton(0,mEditText.getText().toString());
-            }
 
-//            else
-//                mListener.onDialogButton(1);
-        }
+}
         //ダイアログを閉じる
         getDialog().cancel();
     }

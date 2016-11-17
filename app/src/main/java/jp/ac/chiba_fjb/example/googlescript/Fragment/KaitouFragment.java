@@ -1,16 +1,15 @@
 package jp.ac.chiba_fjb.example.googlescript.Fragment;
 
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,42 +17,37 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import jp.ac.chiba_fjb.example.googlescript.Fragment.BlankFragment;
+import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
-
-public class Kaitou extends AppCompatActivity implements View.OnClickListener, BlankFragment.OnDialogButtonListener {
-    Intent intent = getIntent();
-
+public class KaitouFragment extends Fragment implements View.OnClickListener, BlankFragment.OnDialogButtonListener {
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        setContentView(R.layout.kaitou);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v =  inflater.inflate(R.layout.kaitou, container, false);
 
         String[][] cc = {{"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ"}, {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}};
 
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+        LinearLayout layout = (LinearLayout)v.findViewById(R.id.layout);
         layout.setBackgroundResource(R.drawable.kborder);
 
-        TextView testtitle = (TextView) findViewById(R.id.testtitle);
+        TextView testtitle = (TextView)v.findViewById(R.id.testtitle);
         testtitle.setText("テスト名");
 
-        ImageView camera = (ImageView) findViewById(R.id.camera);
+        ImageView camera = (ImageView)v.findViewById(R.id.camera);
         camera.setOnClickListener(this);
 
-        ImageView ok = (ImageView) findViewById(R.id.editok);
+        ImageView ok = (ImageView)v.findViewById(R.id.editok);
         ok.setOnClickListener(this);
 
         for (int a = 0; a < 8; a++) {
 
-            LinearLayout toisetumon = new LinearLayout(this);
+            LinearLayout toisetumon = new LinearLayout(getContext());
             toisetumon.setBackgroundResource(R.drawable.kborder);
 
 
-            TextView sb = new TextView(this);
+            TextView sb = new TextView(getContext());
             sb.setGravity(Gravity.CENTER);
             sb.setBackgroundResource(R.drawable.kborder);
             sb.setBackgroundColor(Color.parseColor("#5A5758"));
@@ -68,10 +62,10 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
             layout.addView(sb);
 
             for (int i = 0; i < 10; i++) {
-                LinearLayout setumon = new LinearLayout(this);
+                LinearLayout setumon = new LinearLayout(getContext());
                 setumon.setOrientation(LinearLayout.HORIZONTAL);
 
-                TextView b = new TextView(this);
+                TextView b = new TextView(getContext());
                 b.setText(cc[1][i]);
                 b.setGravity(Gravity.CENTER);
                 b.setBackgroundResource(R.drawable.kborder);
@@ -83,15 +77,15 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
 
                 setumon.addView(b);
 
-                TableLayout kaitou = new TableLayout(this);
+                TableLayout kaitou = new TableLayout(getContext());
                 kaitou.setTag("" + a + i);
 
-                TableRow tableRow = new TableRow(this);
-                TableRow tableRow2 = new TableRow(this);
+                TableRow tableRow = new TableRow(getContext());
+                TableRow tableRow2 = new TableRow(getContext());
 
                 for (int j = 0; j < 10; j++) {
 
-                    TextView text = new TextView(this);
+                    TextView text = new TextView(getContext());
                     text.setOnClickListener(this);
                     text.setTag("" + a + i);
                     text.setText(cc[0][j]);
@@ -113,7 +107,7 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
                 kaitou.addView(tableRow2, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 setumon.addView(kaitou, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                EditText haiten = new EditText(this);
+                EditText haiten = new EditText(getContext());
                 haiten.setEms(1);
                 haiten.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
                 haiten.setGravity(Gravity.CENTER);
@@ -130,7 +124,7 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
             }
             layout.addView(toisetumon, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
-
+    return v;
 
     }
 
@@ -155,9 +149,7 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
             BlankFragment f = new BlankFragment();
             //ダイアログのボタンが押された場合の動作
             f.setOnDialogButtonListener(this);
-            f.show(getFragmentManager(), "");
-
-
+            f.show(f.getFragmentManager(),"");
         }
 
 
@@ -165,7 +157,6 @@ public class Kaitou extends AppCompatActivity implements View.OnClickListener, B
 
     @Override
     public void onDialogButton(int value) {
-        intent.setClassName("com.example.x14g008.magonote", "com.example.x14g008.magonote.MainActivity");
-        startActivity(intent);
+        new MainActivity().onBackPressed();
     }
 }

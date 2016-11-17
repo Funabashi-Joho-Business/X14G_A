@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
+import jp.ac.chiba_fjb.example.googlescript.Fragment.TopFragment;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,8 +18,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainLayout,new top(),top.class.getName());
+        ft.replace(R.id.mainLayout,new TopFragment(),TopFragment.class.getName());
         ft.addToBackStack(null);
         ft.commit();
+    }
+    @Override
+    public void onBackPressed() {
+        int backStackCnt = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackCnt != 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        else
+            super.onBackPressed();
     }
 }
