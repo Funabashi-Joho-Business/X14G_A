@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -17,11 +18,16 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.api.services.script.model.Operation;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
 /**
@@ -35,6 +41,168 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private SaveListener mSaveListener;
     private int mVisibility;
     private boolean mStopFlag;
+
+    private ArrayList<ArrayList<Object>> allSend;//個人別集計送信配列
+    private ArrayList<Object> testCor;//テスト毎集計
+    private ArrayList<Integer> cornum;//正解の配点
+    private ArrayList<Object> corstr;//正解の記号
+
+    private String tempNo;
+    private int tempPoint;
+    private String tempDate;
+
+
+    //簡易ログのために追加
+    final String[] SCOPES = {
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/script.storage",
+            "https://www.googleapis.com/auth/spreadsheets"};
+
+    private GoogleScript mGoogleScript;
+    private Handler mHandler = new Handler();
+    //追加ここまで
+
+
+    public void CorrectAnser(){//正解データの受け取り
+        Bundle bundle = getArguments();
+        List<Object> params = new ArrayList<>();
+        params.add(bundle.getString("TextTag"));
+
+        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ansA",
+                params, new GoogleScript.ScriptListener() {
+                    @Override
+                    public void onExecuted(GoogleScript script, final Operation op) {
+                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (op == null || op.getError() != null) {
+                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                } else {
+                                    //戻ってくる型は、スクリプト側の記述によって変わる
+                                    ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+
+
+                                    for(int i = 0;i<ansList.size();i++){//正解データを正解と配列に分ける
+                                        String a = ansList.get(i).toString();
+                                        corstr.add(a.substring(1,2));//正解
+                                        cornum.add(Integer.valueOf(a.substring(4,a.length()-1)));
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
+
+    public void Agg(ArrayList<String>anser){//集計処理
+
+        int point = 0;
+        Date date = new Date();
+        ArrayList<Object> send = null;//個人別集計
+
+        if(testCor == null){
+            testCor.add(anser.get(1));//試験番号
+        }
+
+        send.add(anser.get(0));
+        send.add(anser.get(1));
+        send.add(date.toString());
+         for(int i = 0;i<corstr.size();i++){
+
+            if (corstr.get(i) != null) {
+                if(corstr.get(i) == anser.get(i+2)){
+                    point = cornum.get(i);
+                }
+                send.add(corstr.get(i));
+                send.add(anser.get(i+2));
+            }else{
+                send.add("　");
+                send.add("　");
+            }
+        }
+        send.add(point);
+        //個人集計格納配列に入れる
+        allSend.add(send);
+
+        //簡易ログ用データ
+        tempDate = date.toString();
+        tempNo = anser.get(0);
+        tempPoint = point;
+
+        //試験別集計データ
+        testCor.add(anser.get(0));//受験者番号
+        testCor.add(date.toString());//採点日時
+        testCor.add(point);//点数
+
+    }
+
+    //GASへの解答の送信処理
+    public  void sendGas(ArrayList<Object> testCor,ArrayList<ArrayList<Object>> allSend){
+
+        Bundle bundle = getArguments();
+        List<Object> params = new ArrayList<>();
+        params.add(bundle.getString("TextValue"));//テスト名
+        params.add(testCor);//試験別集計
+        params.add(allSend);//個人集計群
+
+        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "getdata",
+                params, new GoogleScript.ScriptListener() {
+                    @Override
+                    public void onExecuted(GoogleScript script, final Operation op) {
+                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (op == null || op.getError() != null) {
+                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                } else {
+                                    //戻ってくる型は、スクリプト側の記述によって変わる
+                                    ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+
+                                }
+                            }
+                        });
+                    }
+                });
+
+
+
+    }
+
+    public void sendAns(ArrayList<String> ans){
+        Bundle bundle = getArguments();
+        List<Object> params = new ArrayList<>();
+        params.add(bundle.getString("ans"));
+
+        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "amsw",
+                params, new GoogleScript.ScriptListener() {
+                    @Override
+                    public void onExecuted(GoogleScript script, final Operation op) {
+                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (op == null || op.getError() != null) {
+                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                } else {
+                                    //戻ってくる型は、スクリプト側の記述によって変わる
+                                    ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
+
+
+
+
+
+
 
     static interface SaveListener{
         public void onSave(Bitmap bitmap);
@@ -62,6 +230,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         return view;
     }
+
+
 
     @Override
     public void onStart() {
@@ -292,55 +462,24 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
             TextView textView = (TextView) getView().findViewById(R.id  .textView2);
             textView.setText(sb.toString());
         }
+
+        //読み取ったマークシートを変換
+   //     ArrayList<String> Datas = new ArrayList<String>();
+     //   Datas = convers(anserData.numbers,anserData.ansers);
+
+       // if(true){
+            //集計メソッドに送る
+         //   Agg(Datas);
+        //}else{
+            //正解をGASに送信するメソッドに送る
+        //}
+
+
     }
 
-    public ArrayList<String> anserSend(List<Boolean> numbers, List<Boolean> ansers) {
+    //読み取ったデータの変換
+    public ArrayList<String> convers(List<Boolean> numbers, List<Boolean> ansers) {
         ArrayList<String> sendData = new ArrayList<String>();
-
-        for (int j = 0; j < ansers.size(); j = j + 10) {//ansersの処理
-            for (int i = 0; i < 10; i++) {
-                if (ansers.get(i + j) == true) {
-                    switch (i) {
-                        case 0:
-                            sendData.add("ア");
-                            break;
-                        case 1:
-                            sendData.add("イ");
-                            break;
-                        case 2:
-                            sendData.add("ウ");
-                            break;
-                        case 3:
-                            sendData.add("エ");
-                            break;
-                        case 4:
-                            sendData.add("オ");
-                            break;
-                        case 5:
-                            sendData.add("カ");
-                            break;
-                        case 6:
-                            sendData.add("キ");
-                            break;
-                        case 7:
-                            sendData.add("ク");
-                            break;
-                        case 8:
-                            sendData.add("ケ");
-                            break;
-                        case 9:
-                            sendData.add("コ");
-                            break;
-
-                    }
-                } else {
-                    if (i == 9) {//無回答の場合
-                        sendData.add(" ");
-                        break;
-                    }
-                }
-            }
-        }
 
         //試験番号格納変数
         String s1 = "";
@@ -383,10 +522,58 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 }
             }
         }
-        String sNo = s1+s2+s3;
+
         String gNo = g1+g2+g3+g4+g5+g6;
+        String sNo = s1+s2+s3;
         sendData.add(gNo);
         sendData.add(sNo);
+
+        for (int j = 0; j < ansers.size(); j = j + 10) {//ansersの処理
+            for (int i = 0; i < 10; i++) {
+                if (ansers.get(i + j) == true) {
+                    switch (i) {
+                        case 0:
+                            sendData.add("ア");
+                            break;
+                        case 1:
+                            sendData.add("イ");
+                            break;
+                        case 2:
+                            sendData.add("ウ");
+                            break;
+                        case 3:
+                            sendData.add("エ");
+                            break;
+                        case 4:
+                            sendData.add("オ");
+                            break;
+                        case 5:
+                            sendData.add("カ");
+                            break;
+                        case 6:
+                            sendData.add("キ");
+                            break;
+                        case 7:
+                            sendData.add("ク");
+                            break;
+                        case 8:
+                            sendData.add("ケ");
+                            break;
+                        case 9:
+                            sendData.add("コ");
+                            break;
+                    }
+                } else {
+                    if (i == 9) {//無回答の場合
+                        sendData.add(" ");
+                        break;
+                    }
+                }
+            }
+        }
+
+
         return sendData;
     }
+
 }

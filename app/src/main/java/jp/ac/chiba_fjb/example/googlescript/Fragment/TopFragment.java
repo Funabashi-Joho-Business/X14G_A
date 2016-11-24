@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.api.services.script.model.Operation;
 
 import org.opencv.android.OpenCVLoader;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import jp.ac.chiba_fjb.example.googlescript.R;
 public class TopFragment extends Fragment implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener {
 
     private String selectText;
+    private String selectTag;
     private String mEditValue;
     private String mTextValue;
     private View view;
@@ -44,6 +46,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     private GoogleScript mGoogleScript;
     private Handler mHandler = new Handler();
     private Object savedInstanceState;
+    private Bundle bundle = new Bundle();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState1) {
@@ -76,12 +79,19 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         Intent intent = new Intent();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         int id = v.getId();
+       if(textViewFlag) {
+           bundle.putString("TextValue", selectText);
+           bundle.putString("TextTag", selectTag);
+
+       }
         if(id==R.id.add) { //dialogフラグメントへ、解答作成
             dialog_newCreate f = new dialog_newCreate();
             f.setOnDialogButtonListener(this);
             f.show(getFragmentManager(), "");
         }else if(id==R.id.syukei) { //集計確認
-            ft.replace(R.id.mainLayout,new SyukeiFragment(),SyukeiFragment.class.getName());
+            SyukeiFragment syukei = new SyukeiFragment();
+            syukei.setArguments(bundle);
+            ft.replace(R.id.mainLayout,syukei,SyukeiFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
         }else if(id==R.id.edit && textViewFlag){ //解答編集
@@ -93,6 +103,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             //TextView answerName = (TextView)view.findViewById(R.id.AnswerName);
             //answerName.setText(selectText);
 //            Fragment f = getFragmentManager().getFragment(new Bundle(), CameraFragment.class.getName());
+
             ft.replace(R.id.mainLayout, new CameraFragment(), CameraFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
@@ -101,6 +112,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         }else if(v.getClass()==TextView.class){
             textViewFlag = true;
             selectText = ((TextView)v).getText().toString();
+            selectTag = ((TextView)v).getTag().toString();
             LinearLayout ll = (LinearLayout) view.findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
