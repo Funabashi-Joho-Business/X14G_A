@@ -144,6 +144,24 @@ public class CameraPreview implements TextureView.SurfaceTextureListener,  Camer
             e.printStackTrace();
         }
     }
+    public void setPreviewSize() {
+
+        int index = 0;
+        int max = 0;
+        Camera.Parameters p = mCamera.getParameters();
+        List<Camera.Size> previewSizes = p.getSupportedPreviewSizes();
+        Camera.Size s;
+        for (int i = 0; i < previewSizes.size(); i++) {
+            s = previewSizes.get(i);
+            if(s.width*s.height > max) {
+                max = s.width * s.height;
+                index = i;
+            }
+        }
+        s = previewSizes.get(index);
+        p.setPreviewSize(s.width, s.height);
+        mCamera.setParameters(p);
+    }
     public void setPreviewSize(int width,int height) {
         int i = 0;
         int index = 0;
