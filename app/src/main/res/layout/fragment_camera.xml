@@ -1,8 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="jp.ac.chiba_fjb.example.googlescript.CameraFragment">
+    tools:context="jp.ac.chiba_fjb.example.googlescript.Camera.CameraFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -11,7 +12,7 @@
         android:layout_height="match_parent"
         android:id="@+id/textureView" />
 
-    <jp.ac.chiba_fjb.example.googlescript.PointView
+    <jp.ac.chiba_fjb.example.googlescript.Camera.PointView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/pointView" />

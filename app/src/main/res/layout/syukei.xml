@@ -49,9 +49,9 @@
                 android:text="@string/kozin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/textView13"
+                android:id="@+id/bangou"
                 android:textSize="16dp"
-                android:textColor="#EDECEC"
+                android:textColor="@drawable/textcolor"
                 android:background="#5A5758"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -63,24 +63,24 @@
                 android:text="@string/point"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/textView14"
+                android:id="@+id/tensuu"
                 android:textSize="16dp"
                 android:background="#5A5758"
-                android:textColor="#EDECEC"
+                android:textColor="@drawable/textcolor"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:paddingLeft="10dp"
                 android:paddingBottom="10dp"
-                android:paddingTop="10dp" />
+                android:paddingTop="10dp"
+                android:paddingLeft="5dp" />
 
             <TextView
                 android:text="@string/date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/textView12"
+                android:id="@+id/nitizi"
                 android:textSize="16dp"
                 android:background="#5A5758"
-                android:textColor="#EDECEC"
+                android:textColor="@drawable/textcolor"
                 android:layout_weight="5"
                 android:gravity="center"
                 android:paddingBottom="10dp"
@@ -117,8 +117,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/kborder"
         android:gravity="center"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="25dp">
 
@@ -174,7 +174,7 @@
                 android:padding="5dp"
                 android:textSize="18dp"
                 android:layout_weight="2"
-                android:background="@drawable/kborder"
+                android:background="@drawable/border2"
                 android:gravity="right" />
         </TableRow>
 

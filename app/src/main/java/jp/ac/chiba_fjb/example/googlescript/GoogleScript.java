@@ -29,7 +29,9 @@ import java.util.Set;
 
 public class GoogleScript
 {
-	static interface ScriptListener{
+
+
+	public static interface ScriptListener{
 		public void onExecuted(GoogleScript script, Operation op);
 	}
 	static class ScriptInfo{
