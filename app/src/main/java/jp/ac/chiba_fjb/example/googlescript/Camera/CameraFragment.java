@@ -32,7 +32,7 @@ import jp.ac.chiba_fjb.example.googlescript.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CameraFragment extends Fragment implements CameraPreview.SaveListener, SeekBar.OnSeekBarChangeListener {
+public class CameraFragment extends Fragment implements CameraPreview.SaveListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     private boolean mActive;
     private CameraPreview mCamera;
@@ -196,11 +196,10 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 });
     }
 
-
-
-
-
-
+    @Override
+    public void onClick(View view) {
+        mCamera.setLight(!mCamera.isLight());
+    }
 
 
     static interface SaveListener{
@@ -226,6 +225,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         TextView textView = (TextView) view.findViewById(R.id.textView);
         textView.setText(""+110);
+
+        view.findViewById(R.id.imageLight).setOnClickListener(this);
 
         return view;
     }
@@ -308,7 +309,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         );
 
-        mCamera.setLight(true);
+       // mCamera.setLight(true);
     }
 
     @Override

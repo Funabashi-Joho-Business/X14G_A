@@ -261,4 +261,10 @@ public class CameraPreview implements TextureView.SurfaceTextureListener,  Camer
         mCamera.setParameters(params);
         return true;
     }
+    public boolean isLight(){
+        if(mCamera == null)
+            return false;
+        Camera.Parameters params = mCamera.getParameters();
+        return params.getFlashMode().equals(Camera.Parameters.FLASH_MODE_TORCH);
+    }
 }
