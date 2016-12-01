@@ -3,28 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="jp.ac.chiba_fjb.example.googlescript.Fragment.Kozinseiseki">
+    tools:context="jp.ac.chiba_fjb.example.googlescript.Kozinseiseki">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:layout_height="match_parent"
         android:id="@+id/dialoglayout"
         android:background="@color/dialogbg">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:text="144008"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView3"
+                android:id="@+id/kid"
                 android:gravity="center"
                 android:textColor="#5A5758"
                 android:layout_weight="1"
@@ -32,10 +29,9 @@
                 android:layout_marginLeft="20dp" />
 
             <TextView
-                android:text="50"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView4"
+                android:id="@+id/ktensu"
                 android:gravity="center"
                 android:textColor="#5A5758"
                 android:layout_weight="1"
@@ -44,69 +40,105 @@
 
         </LinearLayout>
 
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView18"
+                    android:textSize="16dp"
+                    android:textColor="#EDECEC"
+                    android:background="#5A5758"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp" />
+
+                <TextView
+                    android:text="正解"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView17"
+                    android:textSize="16dp"
+                    android:textColor="#EDECEC"
+                    android:background="#5A5758"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp" />
+
+                <TextView
+                    android:text="解答"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView16"
+                    android:textSize="16dp"
+                    android:textColor="#EDECEC"
+                    android:background="#5A5758"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp" />
+
+                <TextView
+                    android:text="正答率"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView15"
+                    android:textSize="16dp"
+                    android:textColor="#EDECEC"
+                    android:background="#5A5758"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp" />
+            </TableRow>
+
+        </TableLayout>
+
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_height="250dp">
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/tlayout"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView18" />
-
-                    <TextView
-                        android:text="正答"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView17" />
-
-                    <TextView
-                        android:text="解答"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView16" />
-
-                    <TextView
-                        android:text="正答率"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView15" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
             </TableLayout>
         </ScrollView>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/kettei"
+                app:srcCompat="@drawable/ok"
                 android:id="@+id/imageView5"
                 android:layout_weight="1"
-                android:padding="5dp"/>
+                android:paddingRight="80dp"
+                android:paddingLeft="80dp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/can"
-                android:id="@+id/imageView4"
-                android:layout_weight="1"
-                android:padding="5dp"/>
         </LinearLayout>
 
     </LinearLayout>

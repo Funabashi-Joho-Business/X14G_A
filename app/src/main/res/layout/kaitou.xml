@@ -21,7 +21,6 @@
             android:padding="10dp"/>
 
         <EditText
-            android:text="FE_H28春午前問題"
             android:layout_width="match_parent"
             android:id="@+id/testtitle"
             android:background="#5A5758"
@@ -42,48 +41,39 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
+            android:text="試験番号："
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="32dp"
+            android:id="@+id/textView12"
             android:layout_weight="0"
-            android:paddingLeft="20dp">
+            android:background="#EDECEC"
+            android:textColor="#5A5758"
+            android:paddingLeft="10dp"
+            android:paddingTop="0dp"
+            android:textSize="23dp"/>
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:srcCompat="@drawable/hidari16"
-                android:id="@+id/imageView2"
-                android:gravity="left"
-                android:layout_weight="1"
-                android:layout_marginRight="15dp"/>
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:srcCompat="@drawable/migi15"
-                android:id="@+id/imageView3"
-                android:gravity="left"
-                android:layout_weight="1"
-                android:layout_marginRight="15dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <EditText
+            android:text="101"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0">
+            android:id="@+id/testNo"
+            android:background="#EDECEC"
+            android:textColor="#5A5758"
+            android:paddingLeft="10dp"
+            android:paddingBottom="1dp"
+            android:paddingTop="0dp"
+            android:textSize="23dp"
+            android:layout_marginTop="0dp"
+            android:layout_height="32dp"
+            android:fontFamily="sans-serif"
+            android:layout_weight="1" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                app:srcCompat="@drawable/camera"
-                android:id="@+id/camera"
-                android:layout_weight="0"
-                android:paddingLeft="180dp"/>
-
-        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            app:srcCompat="@drawable/camera"
+            android:id="@+id/camera"
+            android:layout_weight="0" />
 
     </LinearLayout>
 

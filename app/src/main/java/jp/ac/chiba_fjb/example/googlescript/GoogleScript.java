@@ -26,9 +26,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jp.ac.chiba_fjb.example.googlescript.Fragment.KaitouFragment;
+
 
 public class GoogleScript
 {
+
 
 
 	public static interface ScriptListener{

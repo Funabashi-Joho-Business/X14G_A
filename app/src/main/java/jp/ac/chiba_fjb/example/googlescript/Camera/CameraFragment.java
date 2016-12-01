@@ -167,8 +167,6 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                     }
                 });
 
-
-
     }
 
     public void sendAns(ArrayList<String> ans){
@@ -227,6 +225,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         TextView textView = (TextView) view.findViewById(R.id.textView);
         textView.setText(""+110);
+      //  CorrectAnser();//
 
         return view;
     }
@@ -236,7 +235,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     @Override
     public void onStart() {
         super.onStart();
-
+        CorrectAnser();
         mCamera = new CameraPreview();
         mCamera.setSaveListener(this);
         TextureView textureView = (TextureView)getView().findViewById(R.id.textureView);
@@ -464,13 +463,14 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         }
 
         //読み取ったマークシートを変換
-   //     ArrayList<String> Datas = new ArrayList<String>();
-     //   Datas = convers(anserData.numbers,anserData.ansers);
+       //  ArrayList<String> Datas = new ArrayList<String>();
+        //　Datas = convers(anserData.numbers,anserData.ansers);
 
-       // if(true){
-            //集計メソッドに送る
-         //   Agg(Datas);
-        //}else{
+
+         //   集計メソッドに送る
+//            Agg(Datas);
+
+           // else{
             //正解をGASに送信するメソッドに送る
         //}
 

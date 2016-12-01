@@ -1,12 +1,14 @@
 package jp.ac.chiba_fjb.example.googlescript;
 
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
+
 
 import jp.ac.chiba_fjb.example.googlescript.Fragment.TopFragment;
 

@@ -2,6 +2,7 @@ package jp.ac.chiba_fjb.example.googlescript.Camera;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
@@ -47,7 +48,8 @@ public class PointView extends View {
     private void draw(Canvas canvas,List<PointData> pd){
         for(PointData list :pd ) {
             Paint paint = new Paint();
-            paint.setColor(list.color);
+            //paint.setColor(list.color);
+            paint.setColor(Color.parseColor("#FA6362"));
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(10);
 

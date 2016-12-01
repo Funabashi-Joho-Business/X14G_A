@@ -20,7 +20,7 @@
             android:padding="10dp"/>
 
         <TextView
-                android:text="解答一覧     "
+                android:text="テスト一覧     "
                 android:layout_width="match_parent"
             android:id="@+id/textView"
                 android:background="#5A5758"

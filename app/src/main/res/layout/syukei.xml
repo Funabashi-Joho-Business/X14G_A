@@ -20,9 +20,8 @@
             android:padding="10dp"/>
 
         <TextView
-            android:text="テストタイトル"
             android:layout_width="match_parent"
-            android:id="@+id/textView"
+            android:id="@+id/t"
             android:background="#5A5758"
             android:textColor="#EDECEC"
             android:paddingLeft="12dp"

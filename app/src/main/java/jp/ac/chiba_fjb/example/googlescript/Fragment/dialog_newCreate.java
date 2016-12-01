@@ -35,7 +35,7 @@ public class dialog_newCreate extends DialogFragment implements View.OnClickList
 
     //インタフェイスの定義
     public interface OnDialogButtonListener{
-        void onDialogButton(int value,String EditValue);
+        void onDialogButton(int value, String EditValue);
     }
     //インタフェイスのインスタンス保存用
     OnDialogButtonListener mListener;

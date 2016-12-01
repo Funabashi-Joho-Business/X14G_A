@@ -1,7 +1,10 @@
 package jp.ac.chiba_fjb.example.googlescript.Fragment;
 
-import android.app.*;
+import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +30,7 @@ public class BlankFragment extends DialogFragment implements View.OnClickListene
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return d;
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class BlankFragment extends DialogFragment implements View.OnClickListene
 
     public interface OnDialogButtonListener {
         void onDialogButton(int value);
+
     }
 
     //インタフェイスのインスタンス保存用

@@ -2,57 +2,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="jp.ac.chiba_fjb.example.googlescript.Fragment.dialog_newCreate">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="jp.ac.chiba_fjb.example.googlescript.dialog_newCreate">
 
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="50dp"
+            android:paddingBottom="20dp">
 
             <TextView
-                android:text="解答の名前を決めてください。"
+                android:text="テスト名を入力してください"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView5"
-                android:textAlignment="center" />
+                android:gravity="center"
+                android:textSize="20dp"
+                android:textColor="#5A5758"
+                android:layout_marginBottom="30dp" />
 
             <EditText
                 android:layout_width="match_parent"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="解答名"
+                android:hint="テスト名"
                 android:ems="10"
                 android:id="@+id/editText"
-                android:fontFamily="sans-serif"
-                android:singleLine="false"
-                android:textAlignment="textStart" />
+                android:textSize="20dp"
+                android:textColor="#5A5758"/>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
-                <Button
+                <ImageView
                     android:text="キャンセル"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/button3"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/cancel"
+                    android:padding="5dp" />
 
-                <Button
+                <ImageView
                     android:text="決定"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/button2"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ketteibutton"
+                    android:padding="5dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
