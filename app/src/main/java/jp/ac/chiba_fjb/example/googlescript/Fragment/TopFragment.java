@@ -101,6 +101,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             ft.commit();
         } else if (id == R.id.saiten && textViewFlag) {   //カメラ起動
             bundle.putString("TextTag",textTag);
+            bundle.putString("TextView",text);
             CameraFragment camera = new CameraFragment();
             camera.setArguments(bundle);
             ft.replace(R.id.mainLayout,camera, CameraFragment.class.getName());
@@ -132,6 +133,10 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                     mTextValue = (String) v.getTag();
                 }
             }
+        }else if (v.getId() == R.id.copy && textViewFlag) {
+
+
+
         }
     }
 

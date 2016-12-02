@@ -157,9 +157,9 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
                         textView.setText(ListR.get(i*2+1));
                         textView.setGravity(Gravity.RIGHT);
                         break;
-                    case 2://採点日時
+                    case 2://採点日時 要確認
                         s=161;
-                        textView.setText("11/07 14:44");
+                        textView.setText(ListR.get(i*2+2));
                         break;
                 }
 
