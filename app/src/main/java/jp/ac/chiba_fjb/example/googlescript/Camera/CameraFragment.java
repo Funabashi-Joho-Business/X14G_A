@@ -2,7 +2,6 @@ package jp.ac.chiba_fjb.example.googlescript.Camera;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -233,6 +232,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 ft.commit();
                 break;
         }
+   mCamera.setLight(!mCamera.isLight());
     }
 
 
@@ -282,7 +282,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         mCamera.setTextureView(textureView);
         mCamera.open(0);
 
-
+/*
+        //サイズ限定
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point real = getRealSize(getActivity());
         float aspect;
@@ -293,7 +294,12 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         else
             aspect = (float)real.x/real.y;
 
+
         mCamera.setPreviewSize(1280,(int)(1280/aspect));
+  */
+
+        //最大サイズ
+        mCamera.setPreviewSize();
         mCamera.startPreview();
        // mCamera.save();
 
@@ -348,7 +354,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         );
 
-        mCamera.setLight(true);
+       // mCamera.setLight(true);
     }
 
     @Override

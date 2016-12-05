@@ -81,6 +81,19 @@
             android:layout_alignParentEnd="true"
             android:id="@+id/saveBtn" />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/btn_star_big_on"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="22dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/imageLight"
+            android:alpha="0.5"/>
+
     </RelativeLayout>
 
 </FrameLayout>

@@ -4,6 +4,7 @@ package jp.ac.chiba_fjb.example.googlescript.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.TypedValue;
@@ -53,6 +54,12 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         view = inflater.inflate(R.layout.main, container, false);
         savedInstanceState = savedInstanceState1;
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mGoogleScript = new GoogleScript(getActivity(),SCOPES);
     }
 
     @Override
@@ -173,7 +180,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     protected void ansCreate(final String textValue) {
         String s = "初期値";
         final String value = textValue;
-
         mGoogleScript = new GoogleScript(getActivity(), SCOPES);
         //強制的にアカウントを切り替える場合
         mGoogleScript.resetAccount();
@@ -219,8 +225,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void listOutput() {
         //解答名一覧取得
         mGoogleScript = new GoogleScript(getActivity(), SCOPES);
-        //強制的にアカウントを切り替える場合
-        mGoogleScript.resetAccount();
+       //強制的にアカウントを切り替える場合
+//        mGoogleScript.resetAccount();
 
         //送信パラメータ
         List<Object> params = new ArrayList<>();

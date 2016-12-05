@@ -25,10 +25,10 @@ public class CameraPreview implements TextureView.SurfaceTextureListener,  Camer
     private int mTextureHeight;
     private boolean mPreview = false;
     private SaveListener mSaveListener;
-    static interface SaveListener{
+    public static interface SaveListener{
         public void onSave(Bitmap bitmap);
     }
-    void setSaveListener(SaveListener l){
+    public void setSaveListener(SaveListener l){
         mSaveListener = l;
     }
     boolean stopPreview(){
@@ -39,7 +39,7 @@ public class CameraPreview implements TextureView.SurfaceTextureListener,  Camer
         return true;
     }
 
-    boolean startPreview(){
+    public boolean startPreview(){
         try {
             mPreview = true;
             if(mCamera == null)
@@ -143,6 +143,24 @@ public class CameraPreview implements TextureView.SurfaceTextureListener,  Camer
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void setPreviewSize() {
+
+        int index = 0;
+        int max = 0;
+        Camera.Parameters p = mCamera.getParameters();
+        List<Camera.Size> previewSizes = p.getSupportedPreviewSizes();
+        Camera.Size s;
+        for (int i = 0; i < previewSizes.size(); i++) {
+            s = previewSizes.get(i);
+            if(s.width*s.height > max) {
+                max = s.width * s.height;
+                index = i;
+            }
+        }
+        s = previewSizes.get(index);
+        p.setPreviewSize(s.width, s.height);
+        mCamera.setParameters(p);
     }
     public void setPreviewSize(int width,int height) {
         int i = 0;
@@ -260,5 +278,11 @@ public class CameraPreview implements TextureView.SurfaceTextureListener,  Camer
         params.setFlashMode(flag?Camera.Parameters.FLASH_MODE_TORCH:Camera.Parameters.FLASH_MODE_OFF);
         mCamera.setParameters(params);
         return true;
+    }
+    public boolean isLight(){
+        if(mCamera == null)
+            return false;
+        Camera.Parameters params = mCamera.getParameters();
+        return params.getFlashMode().equals(Camera.Parameters.FLASH_MODE_TORCH);
     }
 }
