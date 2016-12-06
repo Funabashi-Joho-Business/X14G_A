@@ -72,23 +72,24 @@
             android:layout_alignParentEnd="true"
             android:padding="20dp" />
 
-        <Button
-            android:text="Save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:srcCompat="@drawable/savebutton"
+            android:id="@+id/saveBtn"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/saveBtn" />
+            android:layout_alignRight="@+id/log"
+            android:layout_alignEnd="@+id/log"
+            android:layout_marginTop="12dp" />
 
-        <Button
-            android:text="light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:srcCompat="@drawable/lightbutton2"
+            android:id="@+id/light"
+            android:layout_alignTop="@+id/saveBtn"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/lightBtn" />
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 

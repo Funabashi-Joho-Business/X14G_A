@@ -88,7 +88,11 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
             if(a.length()>6) {
                 System.out.print(a);
                 ListR.add(a.substring(1, 7));// 受験者番号
-                ListR.add(a.substring(9, a.length() - 1));
+                if(a.length()>9) {
+                    ListR.add(a.substring(9, a.length() - 1));
+                }else{
+                    ListR.add("　");
+                }
             }else{
 
 
