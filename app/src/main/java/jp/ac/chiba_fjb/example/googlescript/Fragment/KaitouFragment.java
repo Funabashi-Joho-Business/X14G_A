@@ -23,9 +23,12 @@ import android.widget.TextView;
 import com.google.android.gms.common.Scopes;
 import com.google.api.services.script.model.Operation;
 
+import org.opencv.android.OpenCVLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.chiba_fjb.example.googlescript.Camera.CameraFragment;
 import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
 import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
@@ -43,11 +46,15 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
 
     private String title;
     private String testId;
+    private View v;
+    private Bundle bundle;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.kaitou, container, false);
+        v = inflater.inflate(R.layout.kaitou, container, false);
+        v.findViewById(R.id.camera).setOnClickListener(this);
+        return v;
     }
 
     @Override
@@ -55,38 +62,44 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
         super.onViewCreated(view, savedInstanceState);
 
 
-
-             Bundle bundle = getArguments();//げっと
-            List<Object> params = new ArrayList<>();
-            System.out.println(bundle.getString("TextView"));
-            mGoogleScript = new GoogleScript(getActivity(), SCOPES);
-            params.add(bundle.getString("TextTag"));//指定した名前
-            testId = bundle.getString("TextTag");
-            title = bundle.getString("TextView");
+        bundle = getArguments();//げっと
+        List<Object> params = new ArrayList<>();
+        System.out.println(bundle.getString("TextView"));
+        mGoogleScript = new GoogleScript(getActivity(), SCOPES);
+        params.add(bundle.getString("TextTag"));//指定した名前
+        testId = bundle.getString("TextTag");
+        title = bundle.getString("TextView");
 
 
 
 //        testtitle.setText(kt[0][0]);
+        if (bundle.getString("Class") == "Top") {
+            mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ansA",
+                    params, new GoogleScript.ScriptListener() {
+                        public void onExecuted(GoogleScript script, final Operation op) {
+                            //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (op == null || op.getError() != null) {
+                                        System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                    } else {
+                                        ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+                                        drawAnser(ansList);
 
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ansA",
-                params, new GoogleScript.ScriptListener() {
-                    public void onExecuted(GoogleScript script, final Operation op) {
-                        //   TextView textView = (TextView) findViewById(R.id.textMessage);
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (op == null || op.getError() != null) {
-                                    System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
-                                } else {
-                                    ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
-                                    drawAnser(ansList);
-
+                                    }
                                 }
-                            }
-                        });
-                    }
-                });
+                            });
+                        }
+                    });
+        } else {
+            ArrayList<ArrayList<String>> ansList =new  ArrayList<ArrayList<String>>();
+            ansList.add(bundle.getStringArrayList("kaitou"));
+            drawAnser(ansList);
+        }
+        bundle.putString("Class", "Kaitou");
     }
+
     void drawAnser(ArrayList<ArrayList<String>> ansList) {
         View v = getView();
 
@@ -96,160 +109,174 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
         final String[][] cc = {{"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ"}, {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}};
         final String kt[][] = new String[2][80];
 
-        //戻ってくる型は、スクリプト側の記述によって変わる
-        for (int i = 0; i < ansList.size()-1; i++) {//正解データを正解と配列に分ける
-            String a = ansList.get(i).toString();
-            if(a.length()>5){
-            kt[0][i] = (a.substring(1, 2));//正解
-            kt[1][i] = (a.substring(4, a.length() - 1));
-            }else if(a.length()>4){
-                kt[0][i] = (a.substring(1, 2));
-                kt[1][i] = ""+0;
-            }else{
-               kt[0][i] = ("");//正解
-               kt[1][i] = ""+0;
+        if (bundle.get("Class").equals("Top")) {
+            //戻ってくる型は、スクリプト側の記述によって変わる
+            for (int i = 0; i < ansList.size() - 1; i++) {//正解データを正解と配列に分ける
+                String a = ansList.get(i).toString();
+                if (a.length() > 5) {
+                    kt[0][i] = (a.substring(1, 2));//正解
+                        kt[1][i] = (a.substring(4, a.length() - 1));
+                        kt[1][i] = "0";
+                } else if (a.length() > 4) {
+                    kt[0][i] = (a.substring(1, 2));
+                    kt[1][i] = "" + 0;
+                } else {
+                    kt[0][i] = ("");//正解
+                    kt[1][i] = "" + 0;
+                }
             }
-        }
+        } else if(bundle.getString("Class").equals("Camera")){
+            for (int i = 0; i < 80; i++) {//正解データを正解と配列に分ける
+                String a = ansList.get(0).get(i).toString();
+                    kt[0][i] = a;
+                    kt[1][i] = "0";
+                }
+            }
+            testtitle.setText(title);
 
-        testtitle.setText(title);
+            LinearLayout layout = (LinearLayout) v.findViewById(R.id.layout);
+            layout.setBackgroundResource(R.drawable.kborder);
 
-        LinearLayout layout = (LinearLayout) v.findViewById(R.id.layout);
-        layout.setBackgroundResource(R.drawable.kborder);
-
-        EditText testNo = (EditText) v.findViewById(R.id.testNo);
-        testNo.setText("101");
-        testNo.setInputType(InputType.TYPE_CLASS_NUMBER);
+            EditText testNo = (EditText) v.findViewById(R.id.testNo);
+            testNo.setText("101");
+            testNo.setInputType(InputType.TYPE_CLASS_NUMBER);
 
 //        TextView testtitle = (TextView) v.findViewById(R.id.testtitle);
 //        testtitle.setText("H27秋_AP午前問題");
 
 
-        ImageView camera = (ImageView) v.findViewById(R.id.camera);
-        camera.setOnClickListener(this);
+            ImageView ok = (ImageView) v.findViewById(R.id.editok);
+            ok.setOnClickListener(this);
+            for (int a = 0; a < 8; a++) {
 
 
-        ImageView ok = (ImageView) v.findViewById(R.id.editok);
-        ok.setOnClickListener(this);
-        for (int a = 0; a < 8; a++) {
+                TextView sb = new TextView(getContext());
+                sb.setGravity(Gravity.CENTER);
+                sb.setBackgroundResource(R.drawable.kborder);
+                sb.setBackgroundColor(Color.parseColor("#5A5758"));
+                sb.setTextColor(Color.parseColor("#EDECEC"));
+                sb.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+                sb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                int pd = 10;
+                float scale = getResources().getDisplayMetrics().density;
+                int p = (int) (pd * scale);
+                sb.setPadding(p, p, p, p);
+                sb.setText("" + (a + 1));
+                layout.addView(sb);
 
+                for (int i = 0; i < 10; i++) {
+                    LinearLayout setumon = new LinearLayout(getContext());
+                    setumon.setOrientation(LinearLayout.HORIZONTAL);
+                    int m = a * 10 + i;
+                    setumon.setTag(m);//問題番号のタグ付け
 
-            TextView sb = new TextView(getContext());
-            sb.setGravity(Gravity.CENTER);
-            sb.setBackgroundResource(R.drawable.kborder);
-            sb.setBackgroundColor(Color.parseColor("#5A5758"));
-            sb.setTextColor(Color.parseColor("#EDECEC"));
-            sb.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-            sb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            int pd = 10;
-            float scale = getResources().getDisplayMetrics().density;
-            int p = (int) (pd * scale);
-            sb.setPadding(p, p, p, p);
-            sb.setText("" + (a + 1));
-            layout.addView(sb);
+                    TextView b = new TextView(getContext());
+                    b.setText(cc[1][i]);
+                    b.setGravity(Gravity.CENTER);
+                    //b.setBackgroundResource(R.drawable.kborder);
 
-            for (int i = 0; i < 10; i++) {
-                LinearLayout setumon = new LinearLayout(getContext());
-                setumon.setOrientation(LinearLayout.HORIZONTAL);
-                int m = a * 10 + i;
-                setumon.setTag(m);//問題番号のタグ付け
-
-                TextView b = new TextView(getContext());
-                b.setText(cc[1][i]);
-                b.setGravity(Gravity.CENTER);
-                //b.setBackgroundResource(R.drawable.kborder);
-
-                if ((m & 1) == 0) {
-                    b.setBackgroundResource(R.drawable.kborder);
-                } else {
-                    b.setBackgroundResource(R.drawable.border2);
-
-                }
-
-                b.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-                b.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-                int s = 32;  // dpを指定
-                int ss = (int) (s * scale);
-
-
-                b.setWidth(ss);
-
-                setumon.addView(b);
-
-                TableLayout kaitou = new TableLayout(getContext());
-                kaitou.setTag(m);
-
-                TableRow tableRow = new TableRow(getContext());
-                TableRow tableRow2 = new TableRow(getContext());
-
-                for (int j = 0; j < 10; j++) {
-                    TextView text = new TextView(getContext());
-                    text.setOnClickListener(this);
-                    text.setText(cc[0][j]);
                     if ((m & 1) == 0) {
-                        if (text.getText().equals(kt[0][m])) {
-                            text.setTag("Ans");//解答にはAnsタグをつける
-                            text.setBackgroundResource(R.drawable.btap);//解答は赤く表示する
-
-                        }else {
-                            text.setBackgroundResource(R.drawable.kborder);
-                        }
+                        b.setBackgroundResource(R.drawable.kborder);
                     } else {
-                        if (text.getText().equals(kt[0][m])) {
-                            text.setTag("Ans");//解答にはAnsタグをつける
-                            text.setBackgroundResource(R.drawable.btap);//解答は赤く表示する
+                        b.setBackgroundResource(R.drawable.border2);
 
-                        }else {
-                            text.setBackgroundResource(R.drawable.border2);
-                        }}
-                    ////解答であるかの判定
-
-
-                    text.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-                    text.setGravity(Gravity.CENTER);
-                    s = 48;  // dpを指定
-                    ss = (int) (s * scale);
-                    text.setWidth(ss);
-                    text.setHeight(ss);
-
-                    if (j < 5) {
-                        tableRow.addView(text);
-                    } else {
-                        tableRow2.addView(text);
                     }
-                }
-                kaitou.addView(tableRow, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                kaitou.addView(tableRow2, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                setumon.addView(kaitou, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                EditText haiten = new EditText(getContext());
-                haiten.setEms(1);
-                haiten.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-                haiten.setGravity(Gravity.CENTER);
+                    b.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+                    b.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                    int s = 32;  // dpを指定
+                    int ss = (int) (s * scale);
 
-                haiten.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-                haiten.setText(kt[1][m]);
-                if ((m & 1) == 0) {
-                    haiten.setBackgroundResource(R.drawable.kborder);
-                } else {
-                    haiten.setBackgroundResource(R.drawable.border2);
 
-                }
-                haiten.setTextColor(Color.parseColor("#5A5758"));
-                haiten.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    b.setWidth(ss);
+
+                    setumon.addView(b);
+
+                    TableLayout kaitou = new TableLayout(getContext());
+                    kaitou.setTag(m);
+
+                    TableRow tableRow = new TableRow(getContext());
+                    TableRow tableRow2 = new TableRow(getContext());
+
+                    for (int j = 0; j < 10; j++) {
+                        TextView text = new TextView(getContext());
+                        text.setOnClickListener(this);
+                        text.setText(cc[0][j]);
+                        if ((m & 1) == 0) {
+                            if (text.getText().equals(kt[0][m])) {
+                                text.setTag("Ans");//解答にはAnsタグをつける
+                                text.setBackgroundResource(R.drawable.btap);//解答は赤く表示する
+
+                            } else {
+                                text.setBackgroundResource(R.drawable.kborder);
+                            }
+                        } else {
+                            if (text.getText().equals(kt[0][m])) {
+                                text.setTag("Ans");//解答にはAnsタグをつける
+                                text.setBackgroundResource(R.drawable.btap);//解答は赤く表示する
+
+                            } else {
+                                text.setBackgroundResource(R.drawable.border2);
+                            }
+                        }
+                        ////解答であるかの判定
+
+
+                        text.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+                        text.setGravity(Gravity.CENTER);
+                        s = 48;  // dpを指定
+                        ss = (int) (s * scale);
+                        text.setWidth(ss);
+                        text.setHeight(ss);
+
+                        if (j < 5) {
+                            tableRow.addView(text);
+                        } else {
+                            tableRow2.addView(text);
+                        }
+                    }
+                    kaitou.addView(tableRow, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    kaitou.addView(tableRow2, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    setumon.addView(kaitou, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    EditText haiten = new EditText(getContext());
+                    haiten.setEms(1);
+                    haiten.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                    haiten.setGravity(Gravity.CENTER);
+
+                    haiten.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+                    haiten.setText(kt[1][m]);
+                    if ((m & 1) == 0) {
+                        haiten.setBackgroundResource(R.drawable.kborder);
+                    } else {
+                        haiten.setBackgroundResource(R.drawable.border2);
+
+                    }
+                    haiten.setTextColor(Color.parseColor("#5A5758"));
+                    haiten.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
 //                haiten.setSelection(1);
-                setumon.addView(haiten);
+                    setumon.addView(haiten);
 
-                layout.addView(setumon, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    layout.addView(setumon, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
+                }
             }
         }
-    }
     @Override
     public void onClick(View v) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         String s;
         s = v.getClass().getName();
+        //カメラ起動
+        if(v.getId()==R.id.camera){
+            CameraFragment camera = new CameraFragment();
+            camera.setArguments(bundle);
+            ft.replace(R.id.mainLayout,camera, CameraFragment.class.getName());
+            ft.addToBackStack(null);
+            ft.commit();
+            OpenCVLoader.initDebug();
+        }
         if (s.endsWith("TextView") == true) {
             TableLayout tl = (TableLayout) v.getParent().getParent();
             int m = Integer.parseInt(tl.getTag().toString());
