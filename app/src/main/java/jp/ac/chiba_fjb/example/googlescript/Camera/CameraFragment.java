@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.google.api.services.script.model.Operation;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,11 +42,14 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private SaveListener mSaveListener;
     private int mVisibility;
     private boolean mStopFlag;
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm/dd hh:mm");
 
     private ArrayList<ArrayList<Object>> allSend = new ArrayList<ArrayList<Object>>();//個人別集計送信配列
     private ArrayList<Object> testCor = new ArrayList<Object>();//テスト毎集計
     private ArrayList<Double> cornum = new ArrayList<Double>();//正解の配点
     private ArrayList<String> corstr= new ArrayList<String>();//正解の記号
+
+    private String title;
 
     private String tempNo;
     private Double tempPoint;
@@ -63,6 +67,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
     private Handler mHandler = new Handler();
     private View v;
+    private Bundle bundle;
     //追加ここまで
 
 
@@ -107,6 +112,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         Double point = 0.0;
         Date date = new Date();
+
         ArrayList<Object> send = new ArrayList<Object>();//個人別集計
 
         if(testCor == null)
@@ -115,7 +121,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         send.add(anser.get(0));
         send.add(anser.get(1));
-        send.add(date.toString());
+        send.add(fmt.format(date));
          for(int i = 0;i<corstr.size();i++){
 
             if (corstr.get(i) != null) {
@@ -145,7 +151,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         //試験別集計データ
         testCor.add(anser.get(0));//受験者番号
-        testCor.add(date.toString());//採点日時
+        testCor.add(fmt.format(date));//採点日時
         testCor.add(point);//点数
 
     }
@@ -153,9 +159,10 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     //GASへの解答の送信処理
     public  void sendGas(ArrayList<Object> testCor, ArrayList<ArrayList<Object>> allSend){
 
-        Bundle bundle = getArguments();
+        bundle = getArguments();
+        System.out.println(bundle.getString("TextView"));
         List<Object> params = new ArrayList<>();
-        params.add(bundle.getString("TextValue"));//テスト名
+        params.add(bundle.getString("TextView"));//テスト名
         params.add(testCor);//試験別集計
         params.add(allSend);//個人集計群
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
@@ -224,15 +231,17 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 thread.start();
                 //画面切り替え
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Bundle bundle = getArguments();
                 SyukeiFragment syukeiFragment = new SyukeiFragment();
                 syukeiFragment.setArguments(bundle);
                 ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
+            case R.id.lightBtn:
+                mCamera.setLight(!mCamera.isLight());
+                break;
         }
-   mCamera.setLight(!mCamera.isLight());
+
     }
 
 
@@ -261,6 +270,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         textView.setText(""+110);
 
         v.findViewById(R.id.saveBtn).setOnClickListener(this);
+        v.findViewById(R.id.lightBtn).setOnClickListener(this);
         return v;
     }
 
@@ -272,7 +282,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         Thread thread =new Thread(new Runnable() {
             @Override
             public void run() {
-            CorrectAnser();
+                System.out.println(title);
+                CorrectAnser();
             }
         });
         thread.start();
@@ -395,7 +406,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 final MarkReader.MarkerInfo info = MarkReader.getMarker(bitmap,limit);
                 final MarkReader.AnserData anserData = MarkReader.getAnser(bitmap,info,limit);
                 bitmap.recycle();
-                if(info.markerCount < 4)
+                if(info.markerCount < 4 || anserData==null)
                 {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -505,6 +516,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
             }
             TextView textView = (TextView) getView().findViewById(R.id  .textView2);
             textView.setText(sb.toString());
+            if(anserData.numbers!=null&&anserData.ansers != null)
             Agg(convers(anserData.numbers,anserData.ansers));
         }
 
@@ -560,6 +572,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         String sNo = s1+s2+s3;
         sendData.add(gNo);
         sendData.add(sNo);
+        System.out.println(gNo+" "+sNo);
 
         for (int j = 0; j < ansers.size(); j = j + 10) {//ansersの処理
             for (int i = 0; i < 10; i++) {

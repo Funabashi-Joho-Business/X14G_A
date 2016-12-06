@@ -281,7 +281,7 @@ public class MarkReader {
         return datas;
     }
     public static AnserData getAnser(Bitmap bitmap, MarkerInfo info, int limit) {
-        if(info == null || info.markerCount != 4)
+        if(bitmap == null || info == null || info.markerCount != 4)
             return null;
         //矩形の各角度が0.8度以下なら検出を開始
         int i;
@@ -296,13 +296,24 @@ public class MarkReader {
         PointF size = new PointF(7.2f/10.0f,17.8f/40.0f);
 
         PointF start = new PointF(1.82f,9.1f);
-        anserData.ansers = MarkReader.getMark(bitmap,40,start,size, info, limit);
+        List<Boolean> ans;
+        ans = MarkReader.getMark(bitmap, 40, start, size, info, limit);
+        if(ans == null)
+            return null;
+        anserData.ansers = ans;
 
         start = new PointF(11.6f,9.1f);
-        anserData.ansers.addAll(MarkReader.getMark(bitmap,40, start, size, info, limit));
+        ans = MarkReader.getMark(bitmap,40, start, size, info, limit);
+        if(ans == null)
+            return null;
+        anserData.ansers.addAll(ans);
+
 
         start = new PointF(11.6f,2.4f);
-        anserData.numbers = MarkReader.getMark(bitmap,10, start, size, info, limit);
+        ans = MarkReader.getMark(bitmap,10, start, size, info, limit);
+        if(ans == null)
+            return null;
+        anserData.numbers = ans;
 
         return anserData;
     }

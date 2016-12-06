@@ -225,6 +225,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void listOutput() {
         //解答名一覧取得
         mGoogleScript = new GoogleScript(getActivity(), SCOPES);
+        textViewFlag = false;
        //強制的にアカウントを切り替える場合
 //        mGoogleScript.resetAccount();
 

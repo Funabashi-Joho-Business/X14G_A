@@ -60,7 +60,7 @@
             />
 
         <TextView
-            android:text="Log"
+            android:text="待機中"
             android:id="@+id/log"
             android:layout_width="150dp"
             android:layout_height="200dp"
@@ -81,18 +81,14 @@
             android:layout_alignParentEnd="true"
             android:id="@+id/saveBtn" />
 
-        <ImageButton
+        <Button
+            android:text="light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/btn_star_big_on"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="22dp"
-            android:layout_marginEnd="22dp"
-            android:layout_marginTop="20dp"
-            android:id="@+id/imageLight"
-            android:alpha="0.5"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/lightBtn" />
 
     </RelativeLayout>
 
