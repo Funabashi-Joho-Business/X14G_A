@@ -86,6 +86,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void onClick(View v) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
+        bundle.putString("Class","Top");
         int id = v.getId();
         if (id == R.id.add) { //dialogフラグメントへ、解答作成
             dialog_newCreate f = new dialog_newCreate();

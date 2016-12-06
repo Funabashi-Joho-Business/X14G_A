@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import jp.ac.chiba_fjb.example.googlescript.Fragment.KaitouFragment;
 import jp.ac.chiba_fjb.example.googlescript.Fragment.SyukeiFragment;
 import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
 import jp.ac.chiba_fjb.example.googlescript.R;
@@ -72,7 +73,6 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
 
     public void CorrectAnser(){//正解データの受け取り
-        Bundle bundle = getArguments();
         List<Object> params = new ArrayList<>();
         params.add(bundle.getString("TextTag"));
 
@@ -109,35 +109,52 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
 
     public void Agg(ArrayList<String>anser){//集計処理
-
         Double point = 0.0;
         Date date = new Date();
+        if(bundle.getString("Class")=="Top") {
+            ArrayList<Object> send = new ArrayList<Object>();//個人別集計
+            if (testCor == null)
+                testCor.add(anser.get(1));//試験番号
 
-        ArrayList<Object> send = new ArrayList<Object>();//個人別集計
 
-        if(testCor == null)
-            testCor.add(anser.get(1));//試験番号
+            send.add(anser.get(0));
+            send.add(anser.get(1));
+            send.add(fmt.format(date));
+            for (int i = 0; i < corstr.size(); i++) {
 
-
-        send.add(anser.get(0));
-        send.add(anser.get(1));
-        send.add(fmt.format(date));
-         for(int i = 0;i<corstr.size();i++){
-
-            if (corstr.get(i) != null) {
-                if(corstr.get(i) == anser.get(i+2)){
-                    point = cornum.get(i);
+                if (corstr.get(i) != null) {
+                    if (corstr.get(i) == anser.get(i + 2)) {
+                        point = cornum.get(i);
+                    }
+                    send.add(corstr.get(i));
+                    send.add(anser.get(i + 2));
+                } else {
+                    send.add("　");
+                    send.add("　");
                 }
-                send.add(corstr.get(i));
-                send.add(anser.get(i+2));
-            }else{
-                send.add("　");
-                send.add("　");
             }
+            send.add(point);
+            //個人集計格納配列に入れる
+
+            allSend.add(send);
+        }else if(bundle.getString("Class")=="Kaitou"){
+            ArrayList<String> kaitou = new ArrayList<String>();//個人別集計
+            for (int i = 2; i < anser.size()-1; i++) {
+                if (anser.get(i) != null)
+                    kaitou.add(anser.get(i));
+                else
+                    kaitou.add("　");
+                }
+            bundle.putStringArrayList("kaitou",kaitou);
+            bundle.putString("Class","Camera");
+            KaitouFragment kaitouF = new KaitouFragment();
+            kaitouF.setArguments(bundle);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.mainLayout, kaitouF, KaitouFragment.class.getName());
+            ft.addToBackStack(null);
+            ft.commit();
         }
-        send.add(point);
-        //個人集計格納配列に入れる
-        allSend.add(send);
+
 
         TextView log = (TextView)v.findViewById(R.id.log);
 
@@ -220,15 +237,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.saveBtn:
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(allSend!=null&testCor!=null){
-                                sendGas(testCor,allSend);
-                            }
-                        }
-                    });
-                thread.start();
+                    save();
                 //画面切り替え
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 SyukeiFragment syukeiFragment = new SyukeiFragment();
@@ -242,6 +251,18 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 break;
         }
 
+    }
+
+    private void save() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(allSend!=null&testCor!=null){
+                    sendGas(testCor,allSend);
+                }
+            }
+        });
+        thread.start();
     }
 
 
@@ -265,6 +286,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         mSeekBar = (SeekBar)v.findViewById(R.id.seekBar);
         mSeekBar.setProgress(110);
         mSeekBar.setOnSeekBarChangeListener(this);
+        bundle = getArguments();
 
         TextView textView = (TextView) v.findViewById(R.id.textView);
         textView.setText(""+110);
@@ -279,14 +301,16 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     @Override
     public void onStart() {
         super.onStart();
-        Thread thread =new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(title);
-                CorrectAnser();
-            }
-        });
-        thread.start();
+        if(bundle.getString("Class")=="TOP") {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println(title);
+                    CorrectAnser();
+                }
+            });
+            thread.start();
+        }
         mCamera = new CameraPreview();
         mCamera.setSaveListener(this);
         TextureView textureView = (TextureView)getView().findViewById(R.id.textureView);
@@ -456,8 +480,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
     }
     public void onReaded(MarkReader.MarkerInfo info,MarkReader.AnserData anserData){
-
-
+//
+//
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("用紙角度 %f\n誤差角度 %f\n(%04d,%04d) %f\n(%04d,%04d) %f\n(%04d,%04d) %f\n(%04d,%04d) %f\n",
                 info.angle,90-info.markerAngle[1],
@@ -465,60 +489,59 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 info.markerPoint[1].x,info.markerPoint[1].y, info.markerAngle[1],
                 info.markerPoint[2].x,info.markerPoint[2].y, info.markerAngle[2],
                 info.markerPoint[3].x,info.markerPoint[3].y, info.markerAngle[3]));
-
-        //認識したエリアを表示
-        PointView pointView = (PointView)getView().findViewById(R.id.pointView);
-        pointView.clear();
-        pointView.setPoint(Arrays.asList(info.markerPoint),0x30ff0000);
-
-
-        List<PointF> leftArea = new ArrayList<PointF>();
-        leftArea.add(new PointF(1.82f,9.1f));
-        leftArea.add(new PointF(1.82f,27.0f));
-        leftArea.add(new PointF(9.0f,27.0f));
-        leftArea.add(new PointF(9.0f,9.1f));
-        pointView.setPoint(MarkReader.convertPoint(leftArea,info),0x30ff0000);
-
-        List<PointF> leftArea2 = new ArrayList<PointF>();
-        leftArea2.add(new PointF(11.6f,9.1f));
-        leftArea2.add(new PointF(11.6f,27.0f));
-        leftArea2.add(new PointF(18.8f,27.0f));
-        leftArea2.add(new PointF(18.8f,9.1f));
-        pointView.setPoint(MarkReader.convertPoint(leftArea2 ,info),0x30ff0000);
-
-        List<PointF> leftArea3 = new ArrayList<PointF>();
-        leftArea3.add(new PointF(11.6f,2.4f));
-        leftArea3.add(new PointF(11.6f,7.1f));
-        leftArea3.add(new PointF(13.8f,7.1f));
-        leftArea3.add(new PointF(13.8f,2.4f));
-        pointView.setPoint(MarkReader.convertPoint(leftArea3 ,info),0x30ff0000);
-
-        List<PointF> leftArea4 = new ArrayList<PointF>();
-        leftArea4.add(new PointF(14.5f,2.4f));
-        leftArea4.add(new PointF(14.5f,7.1f));
-        leftArea4.add(new PointF(18.8f,7.1f));
-        leftArea4.add(new PointF(18.8f,2.4f));
-        pointView.setPoint(MarkReader.convertPoint(leftArea4 ,info),0x30ff0000);
-
+//
+//        //認識したエリアを表示
+//        PointView pointView = (PointView)getView().findViewById(R.id.pointView);
+//        pointView.clear();
+//        pointView.setPoint(Arrays.asList(info.markerPoint),0x30ff0000);
+//
+//
+//        List<PointF> leftArea = new ArrayList<PointF>();
+//        leftArea.add(new PointF(1.82f,9.1f));
+//        leftArea.add(new PointF(1.82f,27.0f));
+//        leftArea.add(new PointF(9.0f,27.0f));
+//        leftArea.add(new PointF(9.0f,9.1f));
+//        pointView.setPoint(MarkReader.convertPoint(leftArea,info),0x30ff0000);
+//
+//        List<PointF> leftArea2 = new ArrayList<PointF>();
+//        leftArea2.add(new PointF(11.6f,9.1f));
+//        leftArea2.add(new PointF(11.6f,27.0f));
+//        leftArea2.add(new PointF(18.8f,27.0f));
+//        leftArea2.add(new PointF(18.8f,9.1f));
+//        pointView.setPoint(MarkReader.convertPoint(leftArea2 ,info),0x30ff0000);
+//
+//        List<PointF> leftArea3 = new ArrayList<PointF>();
+//        leftArea3.add(new PointF(11.6f,2.4f));
+//        leftArea3.add(new PointF(11.6f,7.1f));
+//        leftArea3.add(new PointF(13.8f,7.1f));
+//        leftArea3.add(new PointF(13.8f,2.4f));
+//        pointView.setPoint(MarkReader.convertPoint(leftArea3 ,info),0x30ff0000);
+//
+//        List<PointF> leftArea4 = new ArrayList<PointF>();
+//        leftArea4.add(new PointF(14.5f,2.4f));
+//        leftArea4.add(new PointF(14.5f,7.1f));
+//        leftArea4.add(new PointF(18.8f,7.1f));
+//        leftArea4.add(new PointF(18.8f,2.4f));
+//        pointView.setPoint(MarkReader.convertPoint(leftArea4 ,info),0x30ff0000);
+//
 
         //マークが読み込めていたら解答を出力
-        List<Boolean> ansers = anserData.ansers;
-
-        if(ansers != null) {
-            int rows = ansers.size() / 20;
-            for (int j = 0; j < rows; j++) {
-                for (int i = 0; i < 10; i++)
-                    sb.append(String.format("%s", ansers.get(j * 10 + i).booleanValue() ? "■" : "□"));
-                sb.append("　");
-                for (int i = 0; i < 10; i++)
-                    sb.append(String.format("%s", ansers.get((j+40) * 10 + i).booleanValue() ? "■" : "□"));
-                sb.append("\n");
-            }
-            TextView textView = (TextView) getView().findViewById(R.id  .textView2);
-            textView.setText(sb.toString());
+//        List<Boolean> ansers = anserData.ansers;
+//
+//        if(ansers != null) {
+//            int rows = ansers.size() / 20;
+//            for (int j = 0; j < rows; j++) {
+//                for (int i = 0; i < 10; i++)
+//                    sb.append(String.format("%s", ansers.get(j * 10 + i).booleanValue() ? "■" : "□"));
+//                sb.append("　");
+//                for (int i = 0; i < 10; i++)
+//                    sb.append(String.format("%s", ansers.get((j+40) * 10 + i).booleanValue() ? "■" : "□"));
+//                sb.append("\n");
+//            }
+//            TextView textView = (TextView) getView().findViewById(R.id  .textView2);
+//            textView.setText(sb.toString());
             if(anserData.numbers!=null&&anserData.ansers != null)
             Agg(convers(anserData.numbers,anserData.ansers));
-        }
 
     }
 
@@ -527,16 +550,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         ArrayList<String> sendData = new ArrayList<String>();
 
         //試験番号格納変数
-        String s1 = "";
-        String s2 = "";
-        String s3 = "";
-        //学籍番号格納変数
-        String g1 = "";
-        String g2 = "";
-        String g3 = "";
-        String g4 = "";
-        String g5 = "";
-        String g6 = "";
+        String s1="",s2="",s3="",g1="",g2="",g3="",g4="",g5="",g6="";
 
         for (int j = 0; j < 100; j = j + 10) {
             for (int i = 0; i < 10; i++) {//試験番号、学籍番号の取得 i=横座標　j=縦座標
