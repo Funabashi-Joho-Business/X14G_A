@@ -75,7 +75,7 @@
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            app:srcCompat="@drawable/savebutton"
+            app:srcCompat="@drawable/xsavebutton"
             android:id="@+id/saveBtn"
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/log"
@@ -87,6 +87,8 @@
             android:layout_height="60dp"
             app:srcCompat="@drawable/lightbutton2"
             android:id="@+id/light"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:layout_alignTop="@+id/saveBtn"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

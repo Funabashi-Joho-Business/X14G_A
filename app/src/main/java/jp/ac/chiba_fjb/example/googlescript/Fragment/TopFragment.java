@@ -44,15 +44,15 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
     private GoogleScript mGoogleScript;
     private Handler mHandler = new Handler();
-    private Object savedInstanceState;
     private int select = -1;
     private String textTag;
     private String text;
+    private LinearLayout layout;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState1) {
         view = inflater.inflate(R.layout.main, container, false);
-        savedInstanceState = savedInstanceState1;
+        layout = (LinearLayout) view.findViewById(R.id.layout1);
         return view;
     }
 
@@ -66,7 +66,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void onStart() {
         super.onStart();
         //GASからテスト一覧を表示
-        listOutput();
+         listOutput();
         ImageView trash = (ImageView) view.findViewById(R.id.trash);
         trash.setOnClickListener(this);
         ImageView edit = (ImageView) view.findViewById(R.id.edit);
@@ -79,6 +79,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         syukei.setOnClickListener(this);
         ImageView saiten = (ImageView) view.findViewById(R.id.saiten);
         saiten.setOnClickListener(this);
+        ImageView imageView = (ImageView)view.findViewById(R.id.imageView);
+        imageView.setOnClickListener(this);
 
     }
 
@@ -86,6 +88,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void onClick(View v) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
+        bundle.putString("Class","Top");
         int id = v.getId();
         if (id == R.id.add) { //dialogフラグメントへ、解答作成
             dialog_newCreate f = new dialog_newCreate();
@@ -140,8 +143,33 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                     mTextValue = (String) v.getTag();
                 }
             }
-        }else if (v.getId() == R.id.copy && textViewFlag) {
+        } else if (v.getId() == R.id.copy && textViewFlag) {
 
+            mGoogleScript = new GoogleScript(getActivity(), SCOPES);
+            //送信パラメータ
+            List<Object> params = new ArrayList<>();
+            params.add(textTag);
+            params.add(text+"-コピー");
+            mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "copy",
+                    params, new GoogleScript.ScriptListener() {
+                        @Override
+                        public void onExecuted(GoogleScript script, final Operation op) {
+                            //   TextView textView = (TextView) findViewById(R.id.textMessage);
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (op == null || op.getError() != null) {
+                                        System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                    } else {
+                                        //戻ってくる型は、スクリプト側の記述によって変わる
+                                        Map<String, Object> r = op.getResponse();
+                                        String s = (String) r.get("result");
+                                        listOutput();
+                                    }
+                                }
+                            });
+                        }
+                    });
 
 
         }
@@ -159,7 +187,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
     //解答追加
     public void setText(String textValue, String gdrive_fileId) {
-        LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout1);
+
         TextView textView = new TextView(getContext());             //インスタンスの生成(引数はActivityのインスタンス)
         textView.setTag(gdrive_fileId);                      //GoogleDrive上のファイル区別用IDをタグとして設定
         textView.setText("" + textValue);                     //テキストの内容設定
@@ -223,6 +251,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     }
 
     public void listOutput() {
+        layout.removeAllViews();
         //解答名一覧取得
         mGoogleScript = new GoogleScript(getActivity(), SCOPES);
         textViewFlag = false;
@@ -251,7 +280,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                                     s = (ArrayList<Object>) r.get("result");
                                     int i = 0;
                                     while (i < s.size()) {
-                                        System.out.println("解答名：" + s.get(i) + "\t解答ID：" + s.get(i + 1));
                                         setText("" + s.get(i), "" + s.get(i + 1));
                                         i += 2;
                                     }

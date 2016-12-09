@@ -57,6 +57,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private String logmsg = "";
     private String title;
 
+    private boolean dflag = false;
+
     private String tempNo;
     private Double tempPoint;
     private String tempDate;
@@ -114,6 +116,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
 
     public void Agg(ArrayList<String>anser){//集計処理
+        dflag = true;
         Double point = 0.0;
         Date date = new Date();
         if(bundle.getString("Class")=="Top") {
@@ -242,14 +245,17 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.saveBtn:
+                if(dflag == true) {
+                    dflag = false;
                     save();
-                //画面切り替え
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                SyukeiFragment syukeiFragment = new SyukeiFragment();
-                syukeiFragment.setArguments(bundle);
-                ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
-                ft.addToBackStack(null);
-                ft.commit();
+                    //画面切り替え
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    SyukeiFragment syukeiFragment = new SyukeiFragment();
+                    syukeiFragment.setArguments(bundle);
+                    ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
                 break;
             case R.id.light:
                 ImageView light = (ImageView)v.findViewById(R.id.light);

@@ -109,21 +109,24 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
         final String[][] cc = {{"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ"}, {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}};
         final String kt[][] = new String[2][80];
 
-        if (bundle.get("Class").equals("Top")) {
+        if (bundle.get("Class").equals("Kaitou")) {
             //戻ってくる型は、スクリプト側の記述によって変わる
             for (int i = 0; i < ansList.size() - 1; i++) {//正解データを正解と配列に分ける
-                String a = ansList.get(i).toString();
-                if (a.length() > 5) {
-                    kt[0][i] = (a.substring(1, 2));//正解
-                        kt[1][i] = (a.substring(4, a.length() - 1));
-                        kt[1][i] = "0";
-                } else if (a.length() > 4) {
-                    kt[0][i] = (a.substring(1, 2));
-                    kt[1][i] = "" + 0;
-                } else {
-                    kt[0][i] = ("");//正解
-                    kt[1][i] = "" + 0;
-                }
+                ArrayList<String> a = ansList.get(i);
+                kt[0][i]=a.get(0);
+                kt[1][i]=a.get(1);
+
+//                if (a.length() > 5) {
+//                    kt[0][i] = (a.substring(1, 2));//正解
+//                        kt[1][i] = (a.substring(4, a.length() - 1));
+//                        kt[1][i] = "0";
+//                } else if (a.length() > 4) {
+//                    kt[0][i] = (a.substring(1, 2));
+//                    kt[1][i] = "" + 0;
+//                } else {
+//                    kt[0][i] = ("");//正解
+//                    kt[1][i] = "" + 0;
+//                }
             }
         } else if(bundle.getString("Class").equals("Camera")){
             for (int i = 0; i < 80; i++) {//正解データを正解と配列に分ける

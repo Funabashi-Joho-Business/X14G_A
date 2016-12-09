@@ -111,23 +111,31 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
 
         ArrayList<String> k = new ArrayList<String>();
         String kt[][] = new String[2][80];
-
+        ArrayList<String> a = new ArrayList<String>();
         for (int i = 0; i < 80; i++) {//正解データを正解と配列に分ける
-            String a = ansList.get(i).toString();
-            if(a.length()>4){
-                kt[0][i]= a.substring(1, 2);//正解
-                kt[1][i]= a.substring(3, 4);//ユーザーの解答
-            }else if(a.length()>3){
-                kt[0][i] = a.substring(1,2);
-                kt[1][i] = "";
-            }else{
-                kt[0][i] = "";
-                kt[1][i] = "";
-            }
+            a = ansList.get(i);
+            kt[0][i] = a.get(0);
+            kt[1][i] = a.get(1);
+
+
+//            if(a.length()>4){
+//                kt[0][i]= a.substring(1, 2);//正解
+//                kt[1][i]= a.substring(3, 4);//ユーザーの解答
+//            }else if(a.length()>3){
+//                kt[0][i] = a.substring(1,2);
+//                kt[1][i] = "";
+//            }else{
+//                kt[0][i] = "";
+//                kt[1][i] = "";
+//            }
         }
         //ID 点数　取得処理
-        id = ansList.get(80).toString().substring(1,ansList.get(80).toString().length()-1);
-        tensu =ansList.get(81).toString().substring(1,ansList.get(81).toString().length()-1);
+//        id = ansList.get(80).toString().substring(1,ansList.get(80).toString().length()-1);
+//        tensu =ansList.get(81).toString().substring(1,ansList.get(81).toString().length()-1);
+        a = ansList.get(80);
+        id = a.get(0);
+        a = ansList.get(81);
+        tensu =a.get(0);
 
         kid.setText(id);
         ktensu.setText(tensu);
