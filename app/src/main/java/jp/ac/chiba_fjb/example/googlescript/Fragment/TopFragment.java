@@ -35,6 +35,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     private String selectText;
     private String mEditValue;
     private String mTextValue;
+    private int num = 80;
     private View view;
     private boolean textViewFlag = false;
     final String[] SCOPES = {
@@ -48,6 +49,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     private String textTag;
     private String text;
     private LinearLayout layout;
+    private boolean flag = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState1) {
@@ -64,9 +66,15 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
     @Override
     public void onStart() {
+
         super.onStart();
         //GASからテスト一覧を表示
-         listOutput();
+        if(flag == true){
+         flag = false;
+        }else {
+            layout.removeAllViews();
+            listOutput();
+        }
         ImageView trash = (ImageView) view.findViewById(R.id.trash);
         trash.setOnClickListener(this);
         ImageView edit = (ImageView) view.findViewById(R.id.edit);
@@ -79,8 +87,10 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         syukei.setOnClickListener(this);
         ImageView saiten = (ImageView) view.findViewById(R.id.saiten);
         saiten.setOnClickListener(this);
-        ImageView imageView = (ImageView)view.findViewById(R.id.imageView);
-        imageView.setOnClickListener(this);
+        ImageView change = (ImageView)view.findViewById(R.id.change);
+        change.setOnClickListener(this);
+        ImageView mondaisuu = (ImageView)view.findViewById(R.id.mondaisuu);
+        mondaisuu.setOnClickListener(this);
 
     }
 
@@ -105,6 +115,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             KaitouFragment kaitouFragment = new KaitouFragment();   //画面遷移先のフラグメントをインスタンス化
             bundle.putString("TextTag",textTag);                  //put[型名]で("名前",値)　例： putString("num","ないよう");
             bundle.putString("TextView",text);
+            bundle.putInt("Qnum",num);
             kaitouFragment.setArguments(bundle);                    //セット
             ft.replace(R.id.mainLayout, kaitouFragment, KaitouFragment.class.getName());
             ft.addToBackStack(null);
@@ -119,11 +130,14 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             ft.commit();
             OpenCVLoader.initDebug();
         } else if (v.getId() == R.id.trash && textViewFlag) {
+            flag = true;
+
             //フラグメントのインスタンスを作成
             TrashFragment f = new TrashFragment();
             //ダイアログのボタンが押された場合の動作
             f.setOnDialogButtonListener(this);
             f.show(getFragmentManager(), "");
+
         } else if (v.getClass() == TextView.class) {
             textTag = ((TextView)v).getTag().toString();
             text =  ((TextView)v).getText().toString();
@@ -171,6 +185,24 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                         }
                     });
 
+
+        }else if (id == R.id.mondaisuu&& textViewFlag){
+            ImageView mondaisuu = (ImageView)view.findViewById(R.id.mondaisuu);
+            if(num == 80) {
+                mondaisuu.setImageResource(R.drawable.mondaisuu80);
+                TextView mode = (TextView)view.findViewById(R.id.mode);
+                mode.setText("mode:50");
+                num = 50;
+            }else if(num == 50){
+                mondaisuu.setImageResource(R.drawable.mondaisuu50);
+                TextView mode = (TextView)view.findViewById(R.id.mode);
+                mode.setText("mode:80");
+                num = 80;
+            }
+
+        }else if(id == R.id.change){
+            mGoogleScript.resetAccount();
+            listOutput();
 
         }
     }
@@ -323,9 +355,11 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                                     if (op == null || op.getError() != null) {
                                         System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                     } else {
+
                                         //戻ってくる型は、スクリプト側の記述によって変わる
                                         Map<String, Object> r = op.getResponse();
                                         ArrayList<Object> s = new ArrayList<Object>();
+
 
                                     }
                                 }

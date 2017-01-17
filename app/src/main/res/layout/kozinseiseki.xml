@@ -59,7 +59,7 @@
                     android:textSize="16dp"
                     android:textColor="#EDECEC"
                     android:background="#5A5758"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
@@ -93,19 +93,6 @@
                     android:paddingTop="10dp"
                     android:paddingLeft="10dp" />
 
-                <TextView
-                    android:text="正答率"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView15"
-                    android:textSize="16dp"
-                    android:textColor="#EDECEC"
-                    android:background="#5A5758"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingLeft="10dp" />
             </TableRow>
 
         </TableLayout>

@@ -62,8 +62,22 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
                                 if (op == null || op.getError() != null) {
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
-                                    ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
-                                    aggregate(ansList);
+                                    ArrayList<ArrayList<Object>> ansList = (ArrayList<ArrayList<Object>>) op.getResponse().get("result");
+                                    ArrayList<ArrayList<String>> ansList2 = new ArrayList<ArrayList<String>>();
+
+                                    for(int i = 0;i<ansList.size();i++){
+                                        ArrayList<Object> cas = new ArrayList<Object>();
+                                        ArrayList<String> scas = new ArrayList<String>();
+                                        cas = ansList.get(i);
+                                        for(int j = 0;j<cas.size();j++){
+                                            String s = cas.get(j).toString();
+                                            if (s == null)
+                                                s = "";
+                                            scas.add(j,s);
+                                        }
+                                        ansList2.add(i,scas);
+                                    }
+                                    aggregate(ansList2);
 
                                 }
                             }
@@ -104,15 +118,21 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
             y = y + 2;
         }
 
+        TextView avg = (TextView)v.findViewById(R.id.textView2);
+        TextView max = (TextView)v.findViewById(R.id.textView5);
+        TextView min = (TextView)v.findViewById(R.id.textView7);
         ArrayList<String> a = resList.get(60);//平均点
-//        ListR.add(a.substring(1, a.length() - 1));
+        if(a.get(0).equals("#DIV/0!")){
+          a.set(0,"0");
+        }
         ListR.add(a.get(0));
+        avg.setText(a.get(0));
         a = resList.get(61);//最高点
-//        ListR.add(a.substring(1, a.length() - 1));
         ListR.add(a.get(0));
+        max.setText(a.get(0));
         a = resList.get(62);//最低点
-//        ListR.add(a.substring(1, a.length() - 1));
         ListR.add(a.get(0));
+        min.setText(a.get(0));
 
         //       requestWindowFeature(Window.FEATURE_NO_TITLE);
         TableLayout tlayout = (TableLayout) v.findViewById(R.id.tlayout);
@@ -131,6 +151,9 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
         nitizi.setOnClickListener(this);
 
 
+        if(ListR.size() == 0){
+
+        }else{
             for (int i = 0; i < (ListR.size() - 3) / 3; i++) {
                 TableRow tableRow = new TableRow(getContext());
                 for (int j = 0; j < 3; j++) {
@@ -160,7 +183,7 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
                             String str = "<u>" + ListR.get(i * 3) + "</u>";//036
                             System.out.print(ListR.get(i * 2));
                             textView.setText(Html.fromHtml(str));
-                            textView.setTag(ListR.get(i * 2));
+                            textView.setTag(ListR.get(i * 3));
                             textView.setOnClickListener(this);
                             break;
                         case 1://点数
@@ -183,6 +206,7 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
 
 
             }
+        }
 
 
     }

@@ -25,6 +25,7 @@ import com.google.api.services.script.model.Operation;
 
 import org.opencv.android.OpenCVLoader;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +47,10 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
 
     private String title;
     private String testId;
+    private int Qnum;
     private View v;
     private Bundle bundle;
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -69,6 +72,8 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
         params.add(bundle.getString("TextTag"));//指定した名前
         testId = bundle.getString("TextTag");
         title = bundle.getString("TextView");
+        Qnum = bundle.getInt("Qnum");
+
 
 
 
@@ -84,8 +89,24 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
                                     if (op == null || op.getError() != null) {
                                         System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                     } else {
-                                        ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
-                                        drawAnser(ansList);
+                                        ArrayList<ArrayList<Object>> ansList = (ArrayList<ArrayList<Object>>) op.getResponse().get("result");
+
+                                        ArrayList<ArrayList<String>> ansList2 = new ArrayList<ArrayList<String>>();
+
+                                        for(int i = 0;i<ansList.size();i++){
+                                            ArrayList<Object> cas = new ArrayList<Object>();
+                                            ArrayList<String> scas = new ArrayList<String>();
+                                            cas = ansList.get(i);
+                                            for(int j = 0;j<cas.size();j++){
+                                                String s = cas.get(j).toString();
+                                                if (s == null)
+                                                    s = "";
+                                                scas.add(j,s);
+                                            }
+                                            ansList2.add(i,scas);
+                                        }
+
+                                        drawAnser(ansList2);
 
                                     }
                                 }
@@ -113,20 +134,10 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
             //戻ってくる型は、スクリプト側の記述によって変わる
             for (int i = 0; i < ansList.size() - 1; i++) {//正解データを正解と配列に分ける
                 ArrayList<String> a = ansList.get(i);
-                kt[0][i]=a.get(0);
-                kt[1][i]=a.get(1);
+                kt[0][i]=a.get(0).toString();
+                String s = a.get(1).toString();
+                kt[1][i]=s;
 
-//                if (a.length() > 5) {
-//                    kt[0][i] = (a.substring(1, 2));//正解
-//                        kt[1][i] = (a.substring(4, a.length() - 1));
-//                        kt[1][i] = "0";
-//                } else if (a.length() > 4) {
-//                    kt[0][i] = (a.substring(1, 2));
-//                    kt[1][i] = "" + 0;
-//                } else {
-//                    kt[0][i] = ("");//正解
-//                    kt[1][i] = "" + 0;
-//                }
             }
         } else if(bundle.getString("Class").equals("Camera")){
             for (int i = 0; i < 80; i++) {//正解データを正解と配列に分ける
@@ -150,7 +161,7 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
 
             ImageView ok = (ImageView) v.findViewById(R.id.editok);
             ok.setOnClickListener(this);
-            for (int a = 0; a < 8; a++) {
+            for (int a = 0; a < (Qnum/10); a++) {
 
 
                 TextView sb = new TextView(getContext());
