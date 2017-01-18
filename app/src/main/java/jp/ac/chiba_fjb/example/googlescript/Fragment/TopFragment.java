@@ -36,7 +36,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     private String mEditValue;
     private String mTextValue;
     private int num = 80;
-    private View view;
     private boolean textViewFlag = false;
     final String[] SCOPES = {
             "https://www.googleapis.com/auth/drive",
@@ -53,7 +52,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState1) {
-        view = inflater.inflate(R.layout.main, container, false);
+        View view = inflater.inflate(R.layout.main, container, false);
         layout = (LinearLayout) view.findViewById(R.id.layout1);
         return view;
     }
@@ -62,20 +61,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
-        mGoogleScript.resetAccount();
-    }
+        //mGoogleScript.resetAccount();
 
-    @Override
-    public void onStart() {
-
-        super.onStart();
-        //GASからテスト一覧を表示
-        if(flag == true){
-         flag = false;
-        }else {
-            layout.removeAllViews();
-            listOutput();
-        }
         ImageView trash = (ImageView) view.findViewById(R.id.trash);
         trash.setOnClickListener(this);
         ImageView edit = (ImageView) view.findViewById(R.id.edit);
@@ -92,12 +79,26 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         change.setOnClickListener(this);
         ImageView mondaisuu = (ImageView)view.findViewById(R.id.mondaisuu);
         mondaisuu.setOnClickListener(this);
+    }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+        //GASからテスト一覧を表示
+        if(flag == true){
+         flag = false;
+        }else {
+//            layout.removeAllViews();
+//            listOutput();
+        }
+
 
     }
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
         Bundle bundle = new Bundle();
         bundle.putString("Class","Top");
         int id = v.getId();
@@ -109,6 +110,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             SyukeiFragment syukeiFragment = new SyukeiFragment();
             bundle.putString("TextView",text);
             syukeiFragment.setArguments(bundle);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
@@ -118,6 +120,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             bundle.putString("TextView",text);
             bundle.putInt("Qnum",num);
             kaitouFragment.setArguments(bundle);                    //セット
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.mainLayout, kaitouFragment, KaitouFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
@@ -126,6 +129,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             bundle.putString("TextView",text);
             CameraFragment camera = new CameraFragment();
             camera.setArguments(bundle);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.mainLayout,camera, CameraFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
@@ -144,7 +148,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             text =  ((TextView)v).getText().toString();
             textViewFlag = true;
             selectText = ((TextView) v).getText().toString();
-            LinearLayout ll = (LinearLayout) view.findViewById(R.id.layout1);
+            LinearLayout ll = (LinearLayout) getView().findViewById(R.id.layout1);
             select = ll.indexOfChild(v);
             int i, iCount;
             iCount = ll.getChildCount();
@@ -159,8 +163,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                 }
             }
         } else if (v.getId() == R.id.copy && textViewFlag) {
-
-            mGoogleScript = new GoogleScript(getActivity(), SCOPES);
             //送信パラメータ
             List<Object> params = new ArrayList<>();
             params.add(textTag);
@@ -188,15 +190,15 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
 
         }else if (id == R.id.mondaisuu&& textViewFlag){
-            ImageView mondaisuu = (ImageView)view.findViewById(R.id.mondaisuu);
+            ImageView mondaisuu = (ImageView)getView().findViewById(R.id.mondaisuu);
             if(num == 80) {
                 mondaisuu.setImageResource(R.drawable.mondaisuu80);
-                TextView mode = (TextView)view.findViewById(R.id.mode);
+                TextView mode = (TextView)getView().findViewById(R.id.mode);
                 mode.setText("mode:50");
                 num = 50;
             }else if(num == 50){
                 mondaisuu.setImageResource(R.drawable.mondaisuu50);
-                TextView mode = (TextView)view.findViewById(R.id.mode);
+                TextView mode = (TextView)getView().findViewById(R.id.mode);
                 mode.setText("mode:80");
                 num = 80;
             }
@@ -325,7 +327,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     @Override
     public void onDialogButton(int value) {
         if (value == 0) {
-            LinearLayout ll = (LinearLayout)view.findViewById(R.id.layout1);
+            LinearLayout ll = (LinearLayout)getView().findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
             String s ="";
