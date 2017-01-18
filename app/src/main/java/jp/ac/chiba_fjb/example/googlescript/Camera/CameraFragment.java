@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -31,6 +32,8 @@ import jp.ac.chiba_fjb.example.googlescript.Fragment.KaitouFragment;
 import jp.ac.chiba_fjb.example.googlescript.Fragment.SyukeiFragment;
 import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
 import jp.ac.chiba_fjb.example.googlescript.R;
+
+import static jp.ac.chiba_fjb.example.googlescript.R.id.imageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +53,11 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private ArrayList<Double> cornum = new ArrayList<Double>();//正解の配点
     private ArrayList<String> corstr= new ArrayList<String>();//正解の記号
 
+    private String mcmsg = "";
+    private String logmsg = "";
     private String title;
+
+    private boolean dflag = false;
 
     private String tempNo;
     private Double tempPoint;
@@ -109,6 +116,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
 
     public void Agg(ArrayList<String>anser){//集計処理
+        dflag = true;
         Double point = 0.0;
         Date date = new Date();
         if(bundle.getString("Class")=="Top") {
@@ -122,9 +130,9 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
             send.add(fmt.format(date));
             for (int i = 0; i < corstr.size(); i++) {
 
-                if (corstr.get(i) != null) {
-                    if (corstr.get(i) == anser.get(i + 2)) {
-                        point = cornum.get(i);
+            if (corstr.get(i) != null) {
+                if(corstr.get(i).equals(anser.get(i+2))){
+                    point = cornum.get(i);
                     }
                     send.add(corstr.get(i));
                     send.add(anser.get(i + 2));
@@ -163,7 +171,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         tempNo = anser.get(0);
         tempPoint = point;
 
-        log.setText(tempDate+"\n"+tempNo+"\n"+tempPoint);
+        log.setText("読み取り済\n"+mcmsg+"\n"+tempDate+"\n"+tempNo+"\n"+tempPoint);
 
 
         //試験別集計データ
@@ -237,17 +245,26 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.saveBtn:
+                if(dflag == true) {
+                    dflag = false;
                     save();
-                //画面切り替え
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                SyukeiFragment syukeiFragment = new SyukeiFragment();
-                syukeiFragment.setArguments(bundle);
-                ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
-                ft.addToBackStack(null);
-                ft.commit();
+                    //画面切り替え
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    SyukeiFragment syukeiFragment = new SyukeiFragment();
+                    syukeiFragment.setArguments(bundle);
+                    ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
                 break;
-            case R.id.lightBtn:
+            case R.id.light:
+                ImageView light = (ImageView)v.findViewById(R.id.light);
                 mCamera.setLight(!mCamera.isLight());
+                if(mCamera.isLight()){
+                    light.setImageResource(R.drawable.lightbutton);
+                }else if(!mCamera.isLight()){
+                    light.setImageResource(R.drawable.lightbutton2);
+                }
                 break;
         }
 
@@ -292,7 +309,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         textView.setText(""+110);
 
         v.findViewById(R.id.saveBtn).setOnClickListener(this);
-        v.findViewById(R.id.lightBtn).setOnClickListener(this);
+        v.findViewById(R.id.light).setOnClickListener(this);
+
         return v;
     }
 
@@ -430,15 +448,23 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 final MarkReader.MarkerInfo info = MarkReader.getMarker(bitmap,limit);
                 final MarkReader.AnserData anserData = MarkReader.getAnser(bitmap,info,limit);
                 bitmap.recycle();
-                if(info.markerCount < 4 || anserData==null)
-                {
+                mcmsg = String.format("検出マーク数: %d", info.markerCount);
+
+                if(info.markerCount < 4 || anserData==null){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if(getView()!=null){
                                 TextView textView = (TextView) getView().findViewById(R.id  .textView2);
-                                if(textView != null)
-                                    textView.setText(String.format("検出マーク数: %d",info.markerCount));
+                                TextView log = (TextView)v.findViewById(R.id.log);
+
+                                if(textView != null) {
+                                    textView.setText("");
+
+                                    logmsg = ("読み取り中\n"+String.format("検出マーク数: %d", info.markerCount));
+                                    log.setText(logmsg);
+
+                                }
                             }
                            }
                     });
@@ -586,7 +612,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         String sNo = s1+s2+s3;
         sendData.add(gNo);
         sendData.add(sNo);
-        System.out.println(gNo+" "+sNo);
+
 
         for (int j = 0; j < ansers.size(); j = j + 10) {//ansersの処理
             for (int i = 0; i < 10; i++) {

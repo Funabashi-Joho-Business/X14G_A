@@ -101,8 +101,8 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
 
     public void kojin(ArrayList<ArrayList<String>> ansList){
         String[] cc = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
-//        float scale = getResources().getDisplayMetrics().density;
-  float scale = 500;
+        float scale = getResources().getDisplayMetrics().density;
+//  float scale = 500;
         int s=0;
         int ss;
 
@@ -111,23 +111,32 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
 
         ArrayList<String> k = new ArrayList<String>();
         String kt[][] = new String[2][80];
-
+        ArrayList<String> a = new ArrayList<String>();
         for (int i = 0; i < 80; i++) {//正解データを正解と配列に分ける
-            String a = ansList.get(i).toString();
-            if(a.length()>4){
-                kt[0][i]= a.substring(1, 2);//正解
-                kt[1][i]= a.substring(3, 4);//ユーザーの解答
-            }else if(a.length()>3){
-                kt[0][i] = a.substring(1,2);
-                kt[1][i] = "";
-            }else{
-                kt[0][i] = "";
-                kt[1][i] = "";
-            }
+            a = ansList.get(i);
+            kt[0][i] = a.get(0);
+            kt[1][i] = a.get(1);
+
+
+//            if(a.length()>4){
+//                kt[0][i]= a.substring(1, 2);//正解
+//                kt[1][i]= a.substring(3, 4);//ユーザーの解答
+//            }else if(a.length()>3){
+//                kt[0][i] = a.substring(1,2);
+//                kt[1][i] = "";
+//            }else{
+//                kt[0][i] = "";
+//                kt[1][i] = "";
+//            }
         }
         //ID 点数　取得処理
-        id = ansList.get(80).toString().substring(1,ansList.get(80).toString().length()-1);
-        tensu =ansList.get(81).toString().substring(1,ansList.get(81).toString().length()-1);
+//        id = ansList.get(80).toString().substring(1,ansList.get(80).toString().length()-1);
+//        tensu =ansList.get(81).toString().substring(1,ansList.get(81).toString().length()-1);
+        a = ansList.get(80);
+        id = a.get(0);
+        a = ansList.get(81);
+
+        tensu = a.get(0).toString();
 
         kid.setText(id);
         ktensu.setText(tensu);
@@ -146,7 +155,7 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
 
             for (int i = 0; i < 10; i++) {
                 TableRow tableRow = new TableRow(getActivity());
-                for (int j = 0; j < 4; j++) {
+                for (int j = 0; j < 3; j++) {
 
                     TextView textView = new TextView(getActivity());
 
@@ -166,27 +175,32 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
                             break;
                         case 1://正解
                             s = 66;
-                            textView.setText(kt[0][i]);
+                            textView.setText(kt[0][(t-1)*10+i]);
                             //正解のときに色を変える
-                            if(kt[0][i].equals(kt[1][i])) {
+                            if(!kt[0][(t-1)*10+i].equals("")&&kt[0][(t-1)*10+i].equals(kt[1][(t-1)*10+i])) {
                                 textView.setBackgroundResource(R.drawable.btap);
                             }
                             break;
                         case 2://解答
                             s = 66;
-                            textView.setText(kt[1][i]);
-                            if(kt[0][i].equals(kt[1][i])) {
+                            textView.setText(kt[1][(t-1)*10+i]);
+                            if(!kt[0][(t-1)*10+i].equals("")&&kt[0][(t-1)*10+i].equals(kt[1][(t-1)*10+i])) {
                                 textView.setBackgroundResource(R.drawable.btap);
                             }
                             break;
-                        case 3://正答率
-                            s = 90;
-                            textView.setText("10.0%");
-                            break;
+//                        case 3://正答率
+//                            s = 90;
+//                            textView.setText("10.0%");
+//                            break;
                     }
 
-                    ss = (int) (s * scale);
-                    textView.setWidth(ss);
+                    if(j==1 || j==2) {
+                        ss = (int) (s * scale);
+                        textView.setWidth(ss + 75);
+                    }else{
+                        ss = (int) (s * scale);
+                        textView.setWidth(ss + 30);
+                    }
 
                     textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
                     textView.setGravity(Gravity.CENTER);
