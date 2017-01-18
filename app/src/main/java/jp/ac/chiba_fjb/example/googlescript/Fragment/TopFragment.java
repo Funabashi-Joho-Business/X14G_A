@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.services.script.model.Operation;
 
@@ -79,22 +80,15 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         change.setOnClickListener(this);
         ImageView mondaisuu = (ImageView)view.findViewById(R.id.mondaisuu);
         mondaisuu.setOnClickListener(this);
-    }
 
-    @Override
-    public void onStart() {
-
-        super.onStart();
         //GASからテスト一覧を表示
         if(flag == true){
-         flag = false;
+            flag = false;
         }else {
-//            layout.removeAllViews();
-//            listOutput();
+            listOutput();
         }
-
-
     }
+
 
     @Override
     public void onClick(View v) {
@@ -248,7 +242,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         //送信パラメータ
         List<Object> params = new ArrayList<>();
         params.add(textValue);
-
+        Toast.makeText(getContext(),textValue+"を作成中", Toast.LENGTH_LONG).show();
         //ID,ファンクション名,結果コールバック
         mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ans2",
                 params, new GoogleScript.ScriptListener() {
@@ -260,12 +254,16 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                             public void run() {
                                 if (op == null || op.getError() != null) {
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                    Toast.makeText(getContext(),"作成エラー", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    Toast.makeText(getContext(),"作成完了", Toast.LENGTH_SHORT).show();
+                                    //リストの更新
+                                    listOutput();
                                     //戻ってくる型は、スクリプト側の記述によって変わる
-                                    Map<String, Object> r = op.getResponse();
-                                    String s = (String) r.get("result");
-                                    System.out.println("Script:" + s);
-                                    setText(value, s);
+//                                    Map<String, Object> r = op.getResponse();
+//                                    String s = (String) r.get("result");
+//                                    System.out.println("Script:" + s);
+//                                    setText(value, s);
                                 }
                             }
                         });
@@ -294,7 +292,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         //送信パラメータ
         List<Object> params = new ArrayList<>();
         params.add(null);
-
+        Toast.makeText(getContext(), "データの取得中", Toast.LENGTH_LONG).show();
         //ID,ファンクション名,結果コールバック
         mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
                 null, new GoogleScript.ScriptListener() {
@@ -305,8 +303,10 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                             @Override
                             public void run() {
                                 if (op == null || op.getError() != null) {
+                                    Toast.makeText(getContext(),"スクリプトエラー", Toast.LENGTH_SHORT).show();
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
+                                    Toast.makeText(getContext(),"受信完了", Toast.LENGTH_SHORT).show();
                                     //戻ってくる型は、スクリプト側の記述によって変わる
                                     Map<String, Object> r = op.getResponse();
                                     ArrayList<Object> s = new ArrayList<Object>();
@@ -323,7 +323,14 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                 });
     }
 
-
+    public void outMessage(final String msg){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(),msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public void onDialogButton(int value) {
         if (value == 0) {
