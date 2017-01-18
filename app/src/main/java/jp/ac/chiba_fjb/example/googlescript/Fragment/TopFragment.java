@@ -60,6 +60,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
+        mGoogleScript.resetAccount();
     }
 
     @Override
@@ -180,9 +181,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     protected void ansCreate(final String textValue) {
         String s = "初期値";
         final String value = textValue;
-        mGoogleScript = new GoogleScript(getActivity(), SCOPES);
         //強制的にアカウントを切り替える場合
-        mGoogleScript.resetAccount();
+        //mGoogleScript.resetAccount();
         //送信パラメータ
         List<Object> params = new ArrayList<>();
         params.add(textValue);
@@ -224,7 +224,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
     public void listOutput() {
         //解答名一覧取得
-        mGoogleScript = new GoogleScript(getActivity(), SCOPES);
         textViewFlag = false;
        //強制的にアカウントを切り替える場合
 //        mGoogleScript.resetAccount();
@@ -235,7 +234,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
         //ID,ファンクション名,結果コールバック
         mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
-                params, new GoogleScript.ScriptListener() {
+                null, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
                         //   TextView textView = (TextView) findViewById(R.id.textMessage);
