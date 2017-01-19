@@ -26,8 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.ac.chiba_fjb.example.googlescript.Fragment.KaitouFragment;
-
 
 public class GoogleScript
 {
@@ -167,7 +165,7 @@ public class GoogleScript
 						if(info.params != null)
 							request.setParameters(info.params);
 						final Operation op = mService.scripts().run(info.scriptId, request).execute();
-						mScripts.remove(mScripts);
+						mScripts.remove(info);
 						if(info.listener != null) {
 							mContext.runOnUiThread(new Runnable() {
 								@Override
@@ -188,7 +186,7 @@ public class GoogleScript
 							requestAccount();
 						}else if(e instanceof GoogleJsonResponseException){
 							//サーバー登録ミス
-							mScripts.remove(mScripts);
+							mScripts.remove(info);
 							if(info.listener != null)
 								mContext.runOnUiThread(new Runnable() {
 									@Override
@@ -201,7 +199,7 @@ public class GoogleScript
 						}
 						else {
 							//登録系エラー
-							mScripts.remove(mScripts);
+							mScripts.remove(info);
 							if(info.listener != null)
 								info.listener.onExecuted(GoogleScript.this,null);
 							e.printStackTrace();
