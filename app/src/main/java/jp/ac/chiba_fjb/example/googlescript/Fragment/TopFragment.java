@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.services.script.model.Operation;
 
@@ -37,7 +38,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     private String mEditValue;
     private String mTextValue;
     private int num = 80;
-    private View view;
     private boolean textViewFlag = false;
     final String[] SCOPES = {
             "https://www.googleapis.com/auth/drive",
@@ -54,7 +54,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState1) {
-        view = inflater.inflate(R.layout.main, container, false);
+        View view = inflater.inflate(R.layout.main, container, false);
         layout = (LinearLayout) view.findViewById(R.id.layout1);
         return view;
     }
@@ -63,19 +63,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
-    }
+        //mGoogleScript.resetAccount();
 
-    @Override
-    public void onStart() {
-
-        super.onStart();
-        //GASからテスト一覧を表示
-        if(flag == true){
-         flag = false;
-        }else {
-            layout.removeAllViews();
-            listOutput();
-        }
         ImageView trash = (ImageView) view.findViewById(R.id.trash);
         trash.setOnClickListener(this);
         ImageView edit = (ImageView) view.findViewById(R.id.edit);
@@ -95,11 +84,18 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         ImageView mondai50 = (ImageView)view.findViewById(R.id.mondai50);
         mondai50.setOnClickListener(this);
 
+        //GASからテスト一覧を表示
+        if(flag == true){
+            flag = false;
+        }else {
+            listOutput();
+        }
     }
+
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
         Bundle bundle = new Bundle();
         bundle.putString("Class","Top");
         int id = v.getId();
@@ -111,6 +107,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             SyukeiFragment syukeiFragment = new SyukeiFragment();
             bundle.putString("TextView",text);
             syukeiFragment.setArguments(bundle);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
@@ -120,6 +117,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             bundle.putString("TextView",text);
             bundle.putInt("Qnum",num);
             kaitouFragment.setArguments(bundle);                    //セット
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.mainLayout, kaitouFragment, KaitouFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
@@ -128,6 +126,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             bundle.putString("TextView",text);
             CameraFragment camera = new CameraFragment();
             camera.setArguments(bundle);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.mainLayout,camera, CameraFragment.class.getName());
             ft.addToBackStack(null);
             ft.commit();
@@ -146,7 +145,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             text =  ((TextView)v).getText().toString();
             textViewFlag = true;
             selectText = ((TextView) v).getText().toString();
-            LinearLayout ll = (LinearLayout) view.findViewById(R.id.layout1);
+            LinearLayout ll = (LinearLayout) getView().findViewById(R.id.layout1);
             select = ll.indexOfChild(v);
             int i, iCount;
             iCount = ll.getChildCount();
@@ -161,8 +160,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                 }
             }
         } else if (v.getId() == R.id.copy && textViewFlag) {
-
-            mGoogleScript = new GoogleScript(getActivity(), SCOPES);
             //送信パラメータ
             List<Object> params = new ArrayList<>();
             params.add(textTag);
@@ -190,8 +187,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
 
         }else if (id == R.id.mondai50&& textViewFlag){
-            ImageView mondai50 = (ImageView)view.findViewById(R.id.mondai50);
-            ImageView mondai80 = (ImageView)view.findViewById(R.id.mondai80);
+            ImageView mondai50 = (ImageView)v.findViewById(R.id.mondai50);
+            ImageView mondai80 = (ImageView)v.findViewById(R.id.mondai80);
 
 
             if(num == 80) {
@@ -201,8 +198,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             }
 
         }else if (id == R.id.mondai80&& textViewFlag){
-            ImageView mondai50 = (ImageView)view.findViewById(R.id.mondai50);
-            ImageView mondai80 = (ImageView)view.findViewById(R.id.mondai80);
+            ImageView mondai50 = (ImageView)v.findViewById(R.id.mondai50);
+            ImageView mondai80 = (ImageView)v.findViewById(R.id.mondai80);
 
             if(num == 50) {
                 mondai50.setImageResource(R.drawable.mondai51);
@@ -250,13 +247,12 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     protected void ansCreate(final String textValue) {
         String s = "初期値";
         final String value = textValue;
-        mGoogleScript = new GoogleScript(getActivity(), SCOPES);
         //強制的にアカウントを切り替える場合
-        mGoogleScript.resetAccount();
+        //mGoogleScript.resetAccount();
         //送信パラメータ
         List<Object> params = new ArrayList<>();
         params.add(textValue);
-
+        Toast.makeText(getContext(),textValue+"を作成中", Toast.LENGTH_LONG).show();
         //ID,ファンクション名,結果コールバック
         mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ans2",
                 params, new GoogleScript.ScriptListener() {
@@ -268,12 +264,16 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                             public void run() {
                                 if (op == null || op.getError() != null) {
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                    Toast.makeText(getContext(),"作成エラー", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    Toast.makeText(getContext(),"作成完了", Toast.LENGTH_SHORT).show();
+                                    //リストの更新
+                                    listOutput();
                                     //戻ってくる型は、スクリプト側の記述によって変わる
-                                    Map<String, Object> r = op.getResponse();
-                                    String s = (String) r.get("result");
-                                    System.out.println("Script:" + s);
-                                    setText(value, s);
+//                                    Map<String, Object> r = op.getResponse();
+//                                    String s = (String) r.get("result");
+//                                    System.out.println("Script:" + s);
+//                                    setText(value, s);
                                 }
                             }
                         });
@@ -295,7 +295,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     public void listOutput() {
         layout.removeAllViews();
         //解答名一覧取得
-        mGoogleScript = new GoogleScript(getActivity(), SCOPES);
         textViewFlag = false;
        //強制的にアカウントを切り替える場合
 //        mGoogleScript.resetAccount();
@@ -303,10 +302,10 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         //送信パラメータ
         List<Object> params = new ArrayList<>();
         params.add(null);
-
+        Toast.makeText(getContext(), "データの取得中", Toast.LENGTH_LONG).show();
         //ID,ファンクション名,結果コールバック
         mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
-                params, new GoogleScript.ScriptListener() {
+                null, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
                         //   TextView textView = (TextView) findViewById(R.id.textMessage);
@@ -314,8 +313,10 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                             @Override
                             public void run() {
                                 if (op == null || op.getError() != null) {
+                                    Toast.makeText(getContext(),"スクリプトエラー", Toast.LENGTH_SHORT).show();
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
+                                    Toast.makeText(getContext(),"受信完了", Toast.LENGTH_SHORT).show();
                                     //戻ってくる型は、スクリプト側の記述によって変わる
                                     Map<String, Object> r = op.getResponse();
                                     ArrayList<Object> s = new ArrayList<Object>();
@@ -332,11 +333,18 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                 });
     }
 
-
+    public void outMessage(final String msg){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(),msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public void onDialogButton(int value) {
         if (value == 0) {
-            LinearLayout ll = (LinearLayout)view.findViewById(R.id.layout1);
+            LinearLayout ll = (LinearLayout)getView().findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
             String s ="";
