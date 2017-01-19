@@ -182,7 +182,6 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                         }
                     });
 
-
         }else if (id == R.id.mondaisuu&& textViewFlag){
             ImageView mondaisuu = (ImageView)getView().findViewById(R.id.mondaisuu);
             if(num == 80) {
@@ -283,7 +282,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     }
 
     public void listOutput() {
-        layout.removeAllViews();
+
         //解答名一覧取得
         textViewFlag = false;
        //強制的にアカウントを切り替える場合
@@ -308,6 +307,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                                 } else {
                                     Toast.makeText(getContext(),"受信完了", Toast.LENGTH_SHORT).show();
                                     //戻ってくる型は、スクリプト側の記述によって変わる
+                                    layout.removeAllViews();
                                     Map<String, Object> r = op.getResponse();
                                     ArrayList<Object> s = new ArrayList<Object>();
                                     s = (ArrayList<Object>) r.get("result");

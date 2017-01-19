@@ -55,21 +55,14 @@ public class dialog_newCreate extends DialogFragment implements View.OnClickList
         return view;
     }
 
-
-
-
     @Override
     public void onClick(View v) {
         //リスナーに登録されているメソッドを呼び出す
         if(mListener != null) {
             if (v.getId() == R.id.button2)
                 mListener.onDialogButton(0,mEditText.getText().toString());
-
-}
+        }
         //ダイアログを閉じる
         getDialog().cancel();
     }
-
-
-
 }
