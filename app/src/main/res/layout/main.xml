@@ -47,25 +47,32 @@
             android:id="@+id/mondai50"
             android:layout_weight="1"
             android:padding="2dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="0dp"
+            android:paddingRight="0dp"
             android:layout_width="36dp"
             android:layout_height="36dp" />
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
             app:srcCompat="@drawable/yazirusi"
             android:id="@+id/imageView2"
             android:layout_weight="1"
-            android:layout_marginRight="10dp"
-            android:padding="2dp" />
+            android:layout_marginRight="0dp"
+            android:padding="2dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="0dp"
+            android:paddingTop="2dp" />
 
         <ImageView
             app:srcCompat="@drawable/mondai80"
             android:id="@+id/mondai80"
-            android:layout_weight="1"
+            android:layout_weight="0.07"
             android:padding="2dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginRight="40dp"
+            android:paddingLeft="0dp"
+            android:layout_marginLeft="0dp"
+            android:paddingRight="0dp"
             android:layout_width="36dp"
             android:layout_height="36dp" />
 

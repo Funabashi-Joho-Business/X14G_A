@@ -187,19 +187,20 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
 
         }else if (id == R.id.mondai50&& textViewFlag){
-            ImageView mondai50 = (ImageView)v.findViewById(R.id.mondai50);
-            ImageView mondai80 = (ImageView)v.findViewById(R.id.mondai80);
 
+            ImageView mondai50 = (ImageView)getView().findViewById(R.id.mondai50);
+            ImageView mondai80 = (ImageView)getView().findViewById(R.id.mondai80);
 
             if(num == 80) {
+
                 mondai50.setImageResource(R.drawable.mondai50);
                 mondai80.setImageResource(R.drawable.mondai81);
                 num = 50;
             }
 
         }else if (id == R.id.mondai80&& textViewFlag){
-            ImageView mondai50 = (ImageView)v.findViewById(R.id.mondai50);
-            ImageView mondai80 = (ImageView)v.findViewById(R.id.mondai80);
+            ImageView mondai50 = (ImageView)getView().findViewById(R.id.mondai50);
+            ImageView mondai80 = (ImageView)getView().findViewById(R.id.mondai80);
 
             if(num == 50) {
                 mondai50.setImageResource(R.drawable.mondai51);
@@ -347,17 +348,17 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             LinearLayout ll = (LinearLayout)getView().findViewById(R.id.layout1);
             int i, iCount;
             iCount = ll.getChildCount();
-            String s ="";
-            for (i = 0; i < iCount; i++) {
-                if (select != -1) {
+           String s ="";
+//            for (i = 0; i < iCount; i++) {
+//                if (select != -1) {
                     TextView t = (TextView) ll.getChildAt(select);
-                    s=t.getText().toString();
-                    ll.removeView(ll.getChildAt(select));
-
-                    select = -1;
-                    textViewFlag = false;
-                }
-            }
+                   s=t.getText().toString();
+//                    ll.removeView(ll.getChildAt(select));
+//
+//                    select = -1;
+//                    textViewFlag = false;
+//                }
+//            }
 
             List<Object> params = new ArrayList<>();
             params.add(s);
@@ -377,6 +378,9 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                                         //戻ってくる型は、スクリプト側の記述によって変わる
                                         Map<String, Object> r = op.getResponse();
                                         ArrayList<Object> s = new ArrayList<Object>();
+                                        layout.removeAllViews();
+                                        listOutput();
+
 
 
                                     }
