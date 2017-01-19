@@ -2,6 +2,7 @@ package jp.ac.chiba_fjb.example.googlescript.Fragment;
 
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -89,8 +90,10 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         saiten.setOnClickListener(this);
         ImageView change = (ImageView)view.findViewById(R.id.change);
         change.setOnClickListener(this);
-        ImageView mondaisuu = (ImageView)view.findViewById(R.id.mondaisuu);
-        mondaisuu.setOnClickListener(this);
+        ImageView mondai80 = (ImageView)view.findViewById(R.id.mondai80);
+        mondai80.setOnClickListener(this);
+        ImageView mondai50 = (ImageView)view.findViewById(R.id.mondai50);
+        mondai50.setOnClickListener(this);
 
     }
 
@@ -186,17 +189,24 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                     });
 
 
-        }else if (id == R.id.mondaisuu&& textViewFlag){
-            ImageView mondaisuu = (ImageView)view.findViewById(R.id.mondaisuu);
+        }else if (id == R.id.mondai50&& textViewFlag){
+            ImageView mondai50 = (ImageView)view.findViewById(R.id.mondai50);
+            ImageView mondai80 = (ImageView)view.findViewById(R.id.mondai80);
+
+
             if(num == 80) {
-                mondaisuu.setImageResource(R.drawable.mondaisuu80);
-                TextView mode = (TextView)view.findViewById(R.id.mode);
-                mode.setText("mode:50");
+                mondai50.setImageResource(R.drawable.mondai50);
+                mondai80.setImageResource(R.drawable.mondai81);
                 num = 50;
-            }else if(num == 50){
-                mondaisuu.setImageResource(R.drawable.mondaisuu50);
-                TextView mode = (TextView)view.findViewById(R.id.mode);
-                mode.setText("mode:80");
+            }
+
+        }else if (id == R.id.mondai80&& textViewFlag){
+            ImageView mondai50 = (ImageView)view.findViewById(R.id.mondai50);
+            ImageView mondai80 = (ImageView)view.findViewById(R.id.mondai80);
+
+            if(num == 50) {
+                mondai50.setImageResource(R.drawable.mondai51);
+                mondai80.setImageResource(R.drawable.mondai80);
                 num = 80;
             }
 

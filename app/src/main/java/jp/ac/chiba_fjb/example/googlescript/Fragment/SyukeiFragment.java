@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -150,6 +152,9 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
         TextView nitizi = (TextView) v.findViewById(R.id.nitizi);
         nitizi.setOnClickListener(this);
 
+        ImageView imageView = (ImageView)v.findViewById(R.id.imageView);
+        imageView.setOnClickListener(this);
+
 
         if(ListR.size() == 0){
 
@@ -213,6 +218,7 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (v.getId() == R.id.bangou) {
 
 
@@ -220,7 +226,13 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
 
         }else if(v.getId() == R.id.nitizi){
 
-        }else{
+        }else if(v.getId() == R.id.imageView){
+            TopFragment topfragment = new TopFragment();
+            ft.replace(R.id.mainLayout,topfragment, TopFragment.class.getName());
+            ft.addToBackStack(null);
+            ft.commit();
+        }
+        else{
             Kozinseiseki f = new Kozinseiseki();
             Bundle bundle = new Bundle();
             bundle.putString("ID", (String) v.getTag());

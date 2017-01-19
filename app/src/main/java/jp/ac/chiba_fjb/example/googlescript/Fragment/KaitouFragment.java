@@ -57,6 +57,7 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.kaitou, container, false);
         v.findViewById(R.id.camera).setOnClickListener(this);
+        v.findViewById(R.id.imageView).setOnClickListener(this);
         return v;
     }
 
