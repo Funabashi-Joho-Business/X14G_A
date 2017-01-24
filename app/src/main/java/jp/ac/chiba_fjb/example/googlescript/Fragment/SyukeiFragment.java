@@ -29,6 +29,7 @@ import jp.ac.chiba_fjb.example.googlescript.R;
 public class SyukeiFragment extends Fragment implements View.OnClickListener {
 
 
+    boolean flag = false;
     String title;
     private GoogleScript mGoogleScript;
     private Handler mHandler = new Handler();
@@ -48,6 +49,7 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        flag = false;
         //試験別集計の取得
         Bundle bundle = getArguments();
         List<Object> params = new ArrayList<>();
@@ -78,6 +80,10 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
                                             scas.add(j,s);
                                         }
                                         ansList2.add(i,scas);
+                                    }
+
+                                    if(ansList2.get(0)!=null || !ansList2.get(0).get(0).equals("")){
+                                        flag = true;
                                     }
                                     aggregate(ansList2);
 
@@ -233,14 +239,17 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
             ft.commit();
         }
         else{
-            Kozinseiseki f = new Kozinseiseki();
-            Bundle bundle = new Bundle();
-            bundle.putString("ID", (String) v.getTag());
-            bundle.putString("title",title);
-            f.setArguments(bundle);
-            //ダイアログのボタンが押された場合の動作
+            if(v.getTag() != " ") {
+                Object o = v.getTag();
+                Kozinseiseki f = new Kozinseiseki();
+                Bundle bundle = new Bundle();
+                bundle.putString("ID", (String) v.getTag());
+                bundle.putString("title", title);
+                f.setArguments(bundle);
+                //ダイアログのボタンが押された場合の動作
 
-            f.show(getFragmentManager(), "");
+                f.show(getFragmentManager(), "");
+            }
         }
     }
     @Override

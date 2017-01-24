@@ -38,6 +38,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
     private String mEditValue;
     private String mTextValue;
     private int num = 80;
+    private boolean modeFlag = false;
     private boolean textViewFlag = false;
     final String[] SCOPES = {
             "https://www.googleapis.com/auth/drive",
@@ -95,11 +96,15 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
     @Override
     public void onClick(View v) {
-
+        ImageView mondai50 = (ImageView) getView().findViewById(R.id.mondai50);
+        ImageView mondai80 = (ImageView) getView().findViewById(R.id.mondai80);
         Bundle bundle = new Bundle();
         bundle.putString("Class","Top");
         int id = v.getId();
         if (id == R.id.add) { //dialogフラグメントへ、解答作成
+            modeFlag = false;
+            mondai50.setImageResource(R.drawable.mondai51);
+            mondai80.setImageResource(R.drawable.mondai81);
             dialog_newCreate f = new dialog_newCreate();
             f.setOnDialogButtonListener(this);
             f.show(getFragmentManager(), "");
@@ -133,6 +138,11 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             OpenCVLoader.initDebug();
         } else if (v.getId() == R.id.trash && textViewFlag) {
             flag = true;
+            modeFlag = false;
+//            ImageView mondai50 = (ImageView) getView().findViewById(R.id.mondai50);
+            mondai50.setImageResource(R.drawable.mondai51);
+//            ImageView mondai80 = (ImageView) getView().findViewById(R.id.mondai80);
+            mondai80.setImageResource(R.drawable.mondai81);
 
             //フラグメントのインスタンスを作成
             TrashFragment f = new TrashFragment();
@@ -141,6 +151,12 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             f.show(getFragmentManager(), "");
 
         } else if (v.getClass() == TextView.class) {
+
+            if(modeFlag == false) {
+//                ImageView mondai80 = (ImageView) getView().findViewById(R.id.mondai80);
+                mondai80.setImageResource(R.drawable.mondai80);
+                modeFlag = true;
+            }
             textTag = ((TextView)v).getTag().toString();
             text =  ((TextView)v).getText().toString();
             textViewFlag = true;
@@ -160,6 +176,12 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                 }
             }
         } else if (v.getId() == R.id.copy && textViewFlag) {
+            modeFlag = false;
+//            ImageView mondai50 = (ImageView) getView().findViewById(R.id.mondai50);
+            mondai50.setImageResource(R.drawable.mondai51);
+//            ImageView mondai80 = (ImageView) getView().findViewById(R.id.mondai80);
+            mondai80.setImageResource(R.drawable.mondai81);
+
             //送信パラメータ
             List<Object> params = new ArrayList<>();
             params.add(textTag);
@@ -173,7 +195,8 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                                 @Override
                                 public void run() {
                                     if (op == null || op.getError() != null) {
-                                        System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                        System.out.println("Script:error");
+                                        Toast.makeText(getContext(),"作成完了", Toast.LENGTH_SHORT).show();//       textView.append("Script結果:エラー\n");
                                     } else {
                                         //戻ってくる型は、スクリプト側の記述によって変わる
                                         Map<String, Object> r = op.getResponse();
@@ -188,29 +211,68 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
         }else if (id == R.id.mondai50&& textViewFlag){
 
-            ImageView mondai50 = (ImageView)getView().findViewById(R.id.mondai50);
-            ImageView mondai80 = (ImageView)getView().findViewById(R.id.mondai80);
+//            ImageView mondai50 = (ImageView)getView().findViewById(R.id.mondai50);
+//            ImageView mondai80 = (ImageView)getView().findViewById(R.id.mondai80);
 
 
-            if(num == 80) {
-
+            if(num == 80) {//80問から50問に切り替え
+//                選択されていると明色
                 mondai50.setImageResource(R.drawable.mondai50);
                 mondai80.setImageResource(R.drawable.mondai81);
+
+                //選択されていると暗色
+//                mondai50.setImageResource(R.drawable.mondai51);
+//                mondai80.setImageResource(R.drawable.mondai80);
                 num = 50;
-            }
 
-        }else if (id == R.id.mondai80&& textViewFlag){
-            ImageView mondai50 = (ImageView)getView().findViewById(R.id.mondai50);
-            ImageView mondai80 = (ImageView)getView().findViewById(R.id.mondai80);
+            }else if (num == 50){//50問から80問に切り替え
 
-            if(num == 50) {
+                //選択されていると明色
                 mondai50.setImageResource(R.drawable.mondai51);
                 mondai80.setImageResource(R.drawable.mondai80);
+
+                //選択されていると暗色
+//                mondai50.setImageResource(R.drawable.mondai51);
+//                mondai80.setImageResource(R.drawable.mondai80);
                 num = 80;
             }
 
+        }else if (id == R.id.mondai80&& textViewFlag){
+//            ImageView mondai50 = (ImageView)getView().findViewById(R.id.mondai50);
+//            ImageView mondai80 = (ImageView)getView().findViewById(R.id.mondai80);
+
+            if(num == 50) {//50問から80問へ
+
+//                選択されていると明色
+                mondai50.setImageResource(R.drawable.mondai51);
+                mondai80.setImageResource(R.drawable.mondai80);
+
+//              選択されていると暗色
+//                mondai50.setImageResource(R.drawable.mondai50);
+//                mondai80.setImageResource(R.drawable.mondai81);
+                num = 80;
+            }else if(num == 80){//80問から50問へ
+
+//              選択されていると明色
+                mondai50.setImageResource(R.drawable.mondai50);
+                mondai80.setImageResource(R.drawable.mondai81);
+
+                //選択されていると暗色
+//                mondai50.setImageResource(R.drawable.mondai51);
+//                mondai80.setImageResource(R.drawable.mondai80);
+
+                num = 50;
+
+
+            }
+
         }else if(id == R.id.change){
+            modeFlag = false;
+//            ImageView mondai50 = (ImageView) getView().findViewById(R.id.mondai50);
+            mondai50.setImageResource(R.drawable.mondai51);
+            mondai80.setImageResource(R.drawable.mondai81);
             mGoogleScript.resetAccount();
+            mGoogleScript.requestAccount();
             listOutput();
 
         }
@@ -364,6 +426,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
 
             List<Object> params = new ArrayList<>();
             params.add(s);
+            Toast.makeText(getContext(),s+"を削除中", Toast.LENGTH_LONG).show();
             //ID,ファンクション名,結果コールバック
             mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "tdelete",
                     params, new GoogleScript.ScriptListener() {
@@ -376,11 +439,13 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
                                     if (op == null || op.getError() != null) {
                                         System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                     } else {
+                                        Toast.makeText(getContext(), "削除完了", Toast.LENGTH_LONG).show();
 
                                         //戻ってくる型は、スクリプト側の記述によって変わる
                                         Map<String, Object> r = op.getResponse();
                                         ArrayList<Object> s = new ArrayList<Object>();
                                         layout.removeAllViews();
+                                        //mGoogleScript.resetAccount();
                                         listOutput();
 
 

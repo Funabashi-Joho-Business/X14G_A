@@ -30,6 +30,7 @@ import java.util.List;
 
 import jp.ac.chiba_fjb.example.googlescript.Fragment.KaitouFragment;
 import jp.ac.chiba_fjb.example.googlescript.Fragment.SyukeiFragment;
+import jp.ac.chiba_fjb.example.googlescript.Fragment.TopFragment;
 import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
@@ -266,6 +267,15 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                     light.setImageResource(R.drawable.lightbutton2);
                 }
                 break;
+            case R.id.back:
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                TopFragment topFragment = new TopFragment();
+                topFragment.setArguments(bundle);
+                ft.replace(R.id.mainLayout, topFragment, TopFragment.class.getName());
+                ft.addToBackStack(null);
+                ft.commit();
+
+
         }
 
     }
@@ -310,6 +320,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         v.findViewById(R.id.saveBtn).setOnClickListener(this);
         v.findViewById(R.id.light).setOnClickListener(this);
+        v.findViewById(R.id.back).setOnClickListener(this);
 
         return v;
     }

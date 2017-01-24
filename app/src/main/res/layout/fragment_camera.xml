@@ -73,22 +73,32 @@
             android:padding="20dp" />
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
             app:srcCompat="@drawable/xsavebutton"
             android:id="@+id/saveBtn"
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/log"
             android:layout_alignEnd="@+id/log"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="12dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginRight="10dp" />
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_height="36dp"
+            app:srcCompat="@drawable/hidari17"
+            android:id="@+id/back"
+            android:layout_width="36dp"
+            android:layout_above="@+id/textView"
+            android:layout_alignLeft="@+id/light"
+            android:layout_alignStart="@+id/light" />
+
+        <ImageView
             app:srcCompat="@drawable/lightbutton2"
             android:id="@+id/light"
-            android:layout_marginLeft="15dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="18dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginLeft="18dp"
             android:layout_alignTop="@+id/saveBtn"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.Scopes;
 import com.google.api.services.script.model.Operation;
@@ -88,6 +89,7 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
                                 @Override
                                 public void run() {
                                     if (op == null || op.getError() != null) {
+                                        Toast.makeText(getContext(),"スクリプトエラー", Toast.LENGTH_SHORT).show();
                                         System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                     } else {
                                         ArrayList<ArrayList<Object>> ansList = (ArrayList<ArrayList<Object>>) op.getResponse().get("result");
@@ -292,6 +294,12 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
             ft.commit();
             OpenCVLoader.initDebug();
         }
+        if(v.getId()==R.id.imageView){
+            TopFragment top = new TopFragment();
+            ft.replace(R.id.mainLayout,top, TopFragment.class.getName());
+            ft.addToBackStack(null);
+            ft.commit();
+        }
         if (s.endsWith("TextView") == true) {
             TableLayout tl = (TableLayout) v.getParent().getParent();
             int m = Integer.parseInt(tl.getTag().toString());
@@ -388,7 +396,6 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
 
 
             List<Object> params = new ArrayList<>();
-            mGoogleScript = new GoogleScript(getActivity(), SCOPES);
             EditText e = (EditText) view.findViewById(R.id.testtitle);
 
             params.add(testId);
