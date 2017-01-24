@@ -44,7 +44,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private SaveListener mSaveListener;
     private int mVisibility;
     private boolean mStopFlag;
-    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/mm/dd hh:mm");
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd hh:mm");
 
     private ArrayList<ArrayList<Object>> allSend = new ArrayList<ArrayList<Object>>();//個人別集計送信配列
     private ArrayList<Object> testCor = new ArrayList<Object>();//テスト毎集計
