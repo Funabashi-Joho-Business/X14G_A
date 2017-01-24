@@ -77,7 +77,7 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, On
 
 //        testtitle.setText(kt[0][0]);
         if (bundle.getString("Class") == "Top") {
-            mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ansA",
+            mGoogleScript.execute(MainActivity.SCRIPT_URL, "ansA",
                     params, new GoogleScript.ScriptListener() {
                         public void onExecuted(GoogleScript script, final Operation op) {
                             //   TextView textView = (TextView) findViewById(R.id.textMessage);
