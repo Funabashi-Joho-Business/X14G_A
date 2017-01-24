@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.services.script.model.Operation;
 
@@ -199,10 +200,18 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                             @Override
                             public void run() {
                                 if (op == null || op.getError() != null) {
+                                    Toast.makeText(getContext(),"保存エラー", Toast.LENGTH_SHORT).show();
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
                                     //戻ってくる型は、スクリプト側の記述によって変わる
+                                    Toast.makeText(getContext(),"保存完了", Toast.LENGTH_SHORT).show();
                                     ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                    SyukeiFragment syukeiFragment = new SyukeiFragment();
+                                    syukeiFragment.setArguments(bundle);
+                                    ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
+                                    ft.addToBackStack(null);
+                                    ft.commit();
 
                                 }
                             }
@@ -247,12 +256,12 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                     dflag = false;
                     save();
                     //画面切り替え
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    SyukeiFragment syukeiFragment = new SyukeiFragment();
-                    syukeiFragment.setArguments(bundle);
-                    ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
-                    ft.addToBackStack(null);
-                    ft.commit();
+//                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                    SyukeiFragment syukeiFragment = new SyukeiFragment();
+//                    syukeiFragment.setArguments(bundle);
+//                    ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
+//                    ft.addToBackStack(null);
+//                    ft.commit();
                 }
                 break;
             case R.id.light:
