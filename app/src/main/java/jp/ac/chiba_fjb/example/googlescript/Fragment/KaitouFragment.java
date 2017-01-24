@@ -21,12 +21,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.Scopes;
 import com.google.api.services.script.model.Operation;
 
 import org.opencv.android.OpenCVLoader;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +33,7 @@ import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
 import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
-import static jp.ac.chiba_fjb.example.googlescript.R.layout.dialog;
-
-public class KaitouFragment extends Fragment implements View.OnClickListener, BlankFragment.OnDialogButtonListener {
+public class KaitouFragment extends Fragment implements View.OnClickListener, OnDialogButtonListener {
 
     private GoogleScript mGoogleScript;
     private Handler mHandler = new Handler();
@@ -403,7 +399,7 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, Bl
             params.add(String.valueOf(e.getText()));
             params.add(kaitou);
 
-            mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "answ",
+            mGoogleScript.execute(MainActivity.SCRIPT_URL, "answ",
                     params, new GoogleScript.ScriptListener() {
                         public void onExecuted(GoogleScript script, final Operation op) {
                             //   TextView textView = (TextView) findViewById(R.id.textMessage);

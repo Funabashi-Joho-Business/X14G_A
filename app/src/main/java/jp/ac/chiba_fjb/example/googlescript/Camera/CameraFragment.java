@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +23,6 @@ import com.google.api.services.script.model.Operation;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +30,8 @@ import jp.ac.chiba_fjb.example.googlescript.Fragment.KaitouFragment;
 import jp.ac.chiba_fjb.example.googlescript.Fragment.SyukeiFragment;
 import jp.ac.chiba_fjb.example.googlescript.Fragment.TopFragment;
 import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
+import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
-
-import static jp.ac.chiba_fjb.example.googlescript.R.id.imageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,7 +82,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         params.add(bundle.getString("TextTag"));
 
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ansA",
+        mGoogleScript.execute(MainActivity.SCRIPT_URL, "ansA",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
@@ -193,7 +190,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         params.add(allSend);//個人集計群
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
 
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "getdata",
+        mGoogleScript.execute(MainActivity.SCRIPT_URL, "getdata",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
@@ -221,7 +218,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         params.add(bundle.getString("ans"));
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
 
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "amsw",
+        mGoogleScript.execute(MainActivity.SCRIPT_URL, "amsw",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {

@@ -2,7 +2,6 @@ package jp.ac.chiba_fjb.example.googlescript.Fragment;
 
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -27,12 +26,13 @@ import java.util.Map;
 
 import jp.ac.chiba_fjb.example.googlescript.Camera.CameraFragment;
 import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
+import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TopFragment extends Fragment implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener,TrashFragment.OnDialogButtonListener, BlankFragment.OnDialogButtonListener {
+public class TopFragment extends Fragment implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener,TrashFragment.OnDialogButtonListener, OnDialogButtonListener {
 
     private String selectText;
     private String mEditValue;
@@ -186,7 +186,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             List<Object> params = new ArrayList<>();
             params.add(textTag);
             params.add(text+"-コピー");
-            mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "copy",
+            mGoogleScript.execute(MainActivity.SCRIPT_URL, "copy",
                     params, new GoogleScript.ScriptListener() {
                         @Override
                         public void onExecuted(GoogleScript script, final Operation op) {
@@ -318,7 +318,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         params.add(textValue);
         Toast.makeText(getContext(),textValue+"を作成中", Toast.LENGTH_LONG).show();
         //ID,ファンクション名,結果コールバック
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ans2",
+        mGoogleScript.execute(MainActivity.SCRIPT_URL, "ans2",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
@@ -368,7 +368,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
         params.add(null);
         Toast.makeText(getContext(), "データの取得中", Toast.LENGTH_LONG).show();
         //ID,ファンクション名,結果コールバック
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "init",
+        mGoogleScript.execute(MainActivity.SCRIPT_URL, "init",
                 null, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
@@ -428,7 +428,7 @@ public class TopFragment extends Fragment implements View.OnClickListener, dialo
             params.add(s);
             Toast.makeText(getContext(),s+"を削除中", Toast.LENGTH_LONG).show();
             //ID,ファンクション名,結果コールバック
-            mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "tdelete",
+            mGoogleScript.execute(MainActivity.SCRIPT_URL, "tdelete",
                     params, new GoogleScript.ScriptListener() {
                         @Override
                         public void onExecuted(GoogleScript script, final Operation op) {
