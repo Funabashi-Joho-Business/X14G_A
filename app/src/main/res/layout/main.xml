@@ -65,7 +65,7 @@
             android:paddingTop="2dp" />
 
         <ImageView
-            app:srcCompat="@drawable/mondai80"
+            app:srcCompat="@drawable/mondai81"
             android:id="@+id/mondai80"
             android:layout_weight="0.07"
             android:padding="2dp"

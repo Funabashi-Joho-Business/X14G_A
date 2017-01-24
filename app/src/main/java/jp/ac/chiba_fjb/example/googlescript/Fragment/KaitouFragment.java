@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.services.script.model.Operation;
 
@@ -84,6 +85,7 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, On
                                 @Override
                                 public void run() {
                                     if (op == null || op.getError() != null) {
+                                        Toast.makeText(getContext(),"スクリプトエラー", Toast.LENGTH_SHORT).show();
                                         System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                     } else {
                                         ArrayList<ArrayList<Object>> ansList = (ArrayList<ArrayList<Object>>) op.getResponse().get("result");
@@ -288,6 +290,12 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, On
             ft.commit();
             OpenCVLoader.initDebug();
         }
+        if(v.getId()==R.id.imageView){
+            TopFragment top = new TopFragment();
+            ft.replace(R.id.mainLayout,top, TopFragment.class.getName());
+            ft.addToBackStack(null);
+            ft.commit();
+        }
         if (s.endsWith("TextView") == true) {
             TableLayout tl = (TableLayout) v.getParent().getParent();
             int m = Integer.parseInt(tl.getTag().toString());
@@ -384,7 +392,6 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, On
 
 
             List<Object> params = new ArrayList<>();
-            mGoogleScript = new GoogleScript(getActivity(), SCOPES);
             EditText e = (EditText) view.findViewById(R.id.testtitle);
 
             params.add(testId);
@@ -392,7 +399,7 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, On
             params.add(String.valueOf(e.getText()));
             params.add(kaitou);
 
-            mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "answ",
+            mGoogleScript.execute(MainActivity.SCRIPT_URL, "answ",
                     params, new GoogleScript.ScriptListener() {
                         public void onExecuted(GoogleScript script, final Operation op) {
                             //   TextView textView = (TextView) findViewById(R.id.textMessage);

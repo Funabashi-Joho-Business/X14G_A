@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
+import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
 import static jp.ac.chiba_fjb.example.googlescript.R.layout.kozinseiseki;
@@ -79,7 +80,7 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
         params.add(bundle.getString("title"));
         params.add(bundle.getString("ID"));
 
-        mGoogleScript.execute("1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro", "ResP",
+        mGoogleScript.execute(MainActivity.SCRIPT_URL, "ResP",
                 params, new GoogleScript.ScriptListener() {
                     public void onExecuted(GoogleScript script, final Operation op) {
                         //   TextView textView = (TextView) findViewById(R.id.textMessage);

@@ -12,7 +12,7 @@ import jp.ac.chiba_fjb.example.googlescript.Fragment.TopFragment;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String SCRIPT_URL = "1R--oj7xaQwzKf0Lk33pHyCh8hSGLG85nqUVQDVwM1TYrMqq61jWCEQro";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

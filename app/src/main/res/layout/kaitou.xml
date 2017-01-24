@@ -55,7 +55,6 @@
 
         <EditText
             android:text="101"
-            android:layout_width="match_parent"
             android:id="@+id/testNo"
             android:background="#EDECEC"
             android:textColor="#5A5758"
@@ -66,14 +65,15 @@
             android:layout_marginTop="0dp"
             android:layout_height="32dp"
             android:fontFamily="sans-serif"
-            android:layout_weight="1" />
+            android:layout_width="180dp" />
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="32dp"
             android:layout_height="32dp"
             app:srcCompat="@drawable/camera"
             android:id="@+id/camera"
-            android:layout_weight="0" />
+            android:layout_weight="0"
+            android:layout_marginRight="20dp" />
 
     </LinearLayout>
 
