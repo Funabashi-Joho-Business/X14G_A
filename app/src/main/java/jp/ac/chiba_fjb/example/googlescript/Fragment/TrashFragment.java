@@ -57,10 +57,10 @@ public class TrashFragment extends DialogFragment implements View.OnClickListene
         void onDialogButton(int value);
     }
     //インタフェイスのインスタンス保存用
-    BlankFragment.OnDialogButtonListener mListener;
+    OnDialogButtonListener mListener;
 
     //ボタン動作のインスタンスを受け取る
-    public void setOnDialogButtonListener(BlankFragment.OnDialogButtonListener listener){
+    public void setOnDialogButtonListener(OnDialogButtonListener listener){
         mListener =  listener;
     }
 

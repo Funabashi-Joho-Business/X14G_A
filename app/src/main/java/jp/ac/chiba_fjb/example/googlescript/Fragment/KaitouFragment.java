@@ -20,12 +20,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.android.gms.common.Scopes;
 import com.google.api.services.script.model.Operation;
 
 import org.opencv.android.OpenCVLoader;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +32,7 @@ import jp.ac.chiba_fjb.example.googlescript.GoogleScript;
 import jp.ac.chiba_fjb.example.googlescript.MainActivity;
 import jp.ac.chiba_fjb.example.googlescript.R;
 
-import static jp.ac.chiba_fjb.example.googlescript.R.layout.dialog;
-
-public class KaitouFragment extends Fragment implements View.OnClickListener, BlankFragment.OnDialogButtonListener {
+public class KaitouFragment extends Fragment implements View.OnClickListener, OnDialogButtonListener {
 
     private GoogleScript mGoogleScript;
     private Handler mHandler = new Handler();

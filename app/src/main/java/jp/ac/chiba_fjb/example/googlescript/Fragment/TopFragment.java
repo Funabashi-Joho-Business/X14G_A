@@ -2,7 +2,6 @@ package jp.ac.chiba_fjb.example.googlescript.Fragment;
 
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -32,7 +31,7 @@ import jp.ac.chiba_fjb.example.googlescript.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TopFragment extends Fragment implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener,TrashFragment.OnDialogButtonListener, BlankFragment.OnDialogButtonListener {
+public class TopFragment extends Fragment implements View.OnClickListener, dialog_newCreate.OnDialogButtonListener,TrashFragment.OnDialogButtonListener, OnDialogButtonListener {
 
     private String selectText;
     private String mEditValue;
