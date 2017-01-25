@@ -609,11 +609,11 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         ArrayList<String> sendData = new ArrayList<String>();
 
         //試験番号格納変数
-        String s1="",s2="",s3="",g1="",g2="",g3="",g4="",g5="",g6="";
+        String s1="0",s2="0",s3="0",g1="0",g2="0",g3="0",g4="0",g5="0",g6="0";
 
         for (int j = 0; j < 100; j = j + 10) {
             for (int i = 0; i < 10; i++) {//試験番号、学籍番号の取得 i=横座標　j=縦座標
-                if (numbers.get(i) == true) {
+                if (numbers.get(i+j) == true) {
                     int a = j / 10 + 1;
                     if (a == 10)
                         a = 0;
@@ -649,6 +649,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 }
             }
         }
+
+
 
         String gNo = g1+g2+g3+g4+g5+g6;
         String sNo = s1+s2+s3;
