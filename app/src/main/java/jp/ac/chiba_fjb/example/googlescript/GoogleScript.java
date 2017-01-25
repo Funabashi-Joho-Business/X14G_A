@@ -80,7 +80,7 @@ public class GoogleScript extends GoogleAccount
 			ExecutionRequest request = new ExecutionRequest().setFunction(info.functionName);
 			if (info.params != null)
 				request.setParameters(info.params);
-
+			request.setDevMode(true);//デベロッパーモード
 			final Operation op = mService.scripts().run(info.scriptId, request).execute();
 			if (info.listener != null) {
 				mContext.runOnUiThread(new Runnable() {
