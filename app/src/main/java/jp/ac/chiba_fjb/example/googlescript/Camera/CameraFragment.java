@@ -95,16 +95,36 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
                                     //戻ってくる型は、スクリプト側の記述によって変わる
-                                    ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+                                    ArrayList<ArrayList<Object>> ansList = (ArrayList<ArrayList<Object>>) op.getResponse().get("result");
+                                    ArrayList<ArrayList<String>> ansList2 = new ArrayList<ArrayList<String>>();
+
+                                    for(int i = 0;i<ansList.size();i++){
+                                        ArrayList<Object> cas = new ArrayList<Object>();
+                                        ArrayList<String> scas = new ArrayList<String>();
+                                        cas = ansList.get(i);
+                                        for(int j = 0;j<cas.size();j++){
+                                            String s = cas.get(j).toString();
+                                            if (s == null)
+                                                s = "";
+                                            scas.add(j,s);
+                                        }
+                                        ansList2.add(i,scas);
+                                    }
 
                                     corstr = new ArrayList<String>();
                                     cornum = new ArrayList<Double>();
                                     for(int i = 0;i<ansList.size()-1;i++){//正解データを正解と配列に分ける
-                                        String a = ansList.get(i).toString();
-                                        System.out.println(a.substring(1,2));
-                                        corstr.add(a.substring(1,2));//正解
+                                        String a = ansList2.get(i).get(0);
 
-                                        cornum.add(Double.valueOf(a.substring(3,a.length()-1)));
+                                        corstr.add(a);//正解
+                                        Double d;
+                                        if(ansList.get(i).get(1)==""){
+                                            d = Double.valueOf(0);
+                                        }else{
+                                            d = Double.valueOf(ansList2.get(i).get(1));
+                                        }
+
+                                        cornum.add(Double.valueOf(d));
                                     }
                                 }
                             }
@@ -120,18 +140,20 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         Date date = new Date();
         if(bundle.getString("Class")=="Top") {
             ArrayList<Object> send = new ArrayList<Object>();//個人別集計
-            if (testCor == null)
+            if (testCor.size() == 0) {
                 testCor.add(anser.get(1));//試験番号
+                testCor.add(fmt.format(date));
+            }
 
 
-            send.add(anser.get(0));
-            send.add(anser.get(1));
-            send.add(fmt.format(date));
+            send.add(anser.get(0));//受験者番号
+            send.add(anser.get(1));//試験番号
+            send.add(fmt.format(date));//採点日時
             for (int i = 0; i < corstr.size(); i++) {
 
             if (corstr.get(i) != null) {
                 if(corstr.get(i).equals(anser.get(i+2))){
-                    point = cornum.get(i);
+                    point = point + cornum.get(i);
                     }
                     send.add(corstr.get(i));
                     send.add(anser.get(i + 2));
@@ -144,7 +166,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
             //個人集計格納配列に入れる
 
             allSend.add(send);
-        }else if(bundle.getString("Class")=="Kaitou"){
+
+        }else if(bundle.getString("Class").equals("Kaitou")){
             ArrayList<String> kaitou = new ArrayList<String>();//個人別集計
             for (int i = 2; i < anser.size(); i++) {
                 if (anser.get(i) != null)
@@ -152,14 +175,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 else
                     kaitou.add("　");
                 }
-            bundle.putStringArrayList("kaitou",kaitou);
-            bundle.putString("Class","Camera");
-            KaitouFragment kaitouF = new KaitouFragment();
-            kaitouF.setArguments(bundle);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.mainLayout, kaitouF, KaitouFragment.class.getName());
-            ft.addToBackStack(null);
-            ft.commit();
+            sendAns(kaitou);
         }
 
 
@@ -175,8 +191,9 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
         //試験別集計データ
         testCor.add(anser.get(0));//受験者番号
-        testCor.add(fmt.format(date));//採点日時
         testCor.add(point);//点数
+        testCor.add(fmt.format(date));//採点日時
+
 
     }
 
@@ -189,6 +206,11 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         params.add(bundle.getString("TextView"));//テスト名
         params.add(testCor);//試験別集計
         params.add(allSend);//個人集計群
+
+//        params.add("テスト名");
+
+
+
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
 
         mGoogleScript.execute(MainActivity.SCRIPT_URL, "getdata",
@@ -206,7 +228,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                                     //戻ってくる型は、スクリプト側の記述によって変わる
                                     Toast.makeText(getContext(),"保存完了", Toast.LENGTH_SHORT).show();
                                     ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
-                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+                                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                                     SyukeiFragment syukeiFragment = new SyukeiFragment();
                                     syukeiFragment.setArguments(bundle);
                                     ft.replace(R.id.mainLayout, syukeiFragment, SyukeiFragment.class.getName());
@@ -221,13 +244,13 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
     }
 
-    public void sendAns(ArrayList<String> ans){
+    public void sendAns(final ArrayList<String> ans){
         Bundle bundle = getArguments();
         List<Object> params = new ArrayList<>();
         params.add(bundle.getString("ans"));
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
 
-        mGoogleScript.execute(MainActivity.SCRIPT_URL, "amsw",
+        mGoogleScript.execute(MainActivity.SCRIPT_URL, "answ",
                 params, new GoogleScript.ScriptListener() {
                     @Override
                     public void onExecuted(GoogleScript script, final Operation op) {
@@ -236,10 +259,21 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                             @Override
                             public void run() {
                                 if (op == null || op.getError() != null) {
+                                    Toast.makeText(getContext(),"保存エラー", Toast.LENGTH_SHORT).show();
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
                                     //戻ってくる型は、スクリプト側の記述によって変わる
                                     ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
+                                    Bundle b = getArguments();
+                                    b.putStringArrayList("kaitou",ans);
+                                    b.putString("Class","Camera");
+                                    KaitouFragment kaitouF = new KaitouFragment();
+                                    kaitouF.setArguments(b);
+                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.mainLayout, kaitouF, KaitouFragment.class.getName());
+                                    ft.addToBackStack(null);
+                                    ft.commit();
+
 
                                 }
                             }
@@ -336,7 +370,8 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     @Override
     public void onStart() {
         super.onStart();
-        if(bundle.getString("Class")=="TOP") {
+        if(bundle.getString("Class").equals("Top")) {
+
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -593,37 +628,48 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         ArrayList<String> sendData = new ArrayList<String>();
 
         //試験番号格納変数
-        String s1="",s2="",s3="",g1="",g2="",g3="",g4="",g5="",g6="";
+        String s1="0",s2="0",s3="0",g1="0",g2="0",g3="0",g4="0",g5="0",g6="0";
 
         for (int j = 0; j < 100; j = j + 10) {
             for (int i = 0; i < 10; i++) {//試験番号、学籍番号の取得 i=横座標　j=縦座標
-                if (numbers.get(i) == true) {
+                if (numbers.get(i+j) == true) {
                     int a = j / 10 + 1;
                     if (a == 10)
                         a = 0;
                     switch (i) {
                         case 0:
                             s1 = String.valueOf(a);
+                            break;
                         case 1:
                             s2 = String.valueOf(a);
+                            break;
                         case 2:
                             s3 = String.valueOf(a);
+                            break;
                         case 4:
                             g1 = String.valueOf(a);
+                            break;
                         case 5:
                             g2 = String.valueOf(a);
+                            break;
                         case 6:
                             g3 = String.valueOf(a);
+                            break;
                         case 7:
                             g4 = String.valueOf(a);
+                            break;
                         case 8:
                             g5 = String.valueOf(a);
+                            break;
                         case 9:
                             g6 = String.valueOf(a);
+                            break;
                     }
                 }
             }
         }
+
+
 
         String gNo = g1+g2+g3+g4+g5+g6;
         String sNo = s1+s2+s3;
