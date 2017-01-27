@@ -45,18 +45,20 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private SaveListener mSaveListener;
     private int mVisibility;
     private boolean mStopFlag;
-    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd hh:mm");
+    SimpleDateFormat fmt = new SimpleDateFormat("yy/MM/dd hh:mm");
 
     private ArrayList<ArrayList<Object>> allSend = new ArrayList<ArrayList<Object>>();//個人別集計送信配列
     private ArrayList<Object> testCor = new ArrayList<Object>();//テスト毎集計
     private ArrayList<Double> cornum = new ArrayList<Double>();//正解の配点
     private ArrayList<String> corstr= new ArrayList<String>();//正解の記号
 
+
     private String mcmsg = "";
     private String logmsg = "";
     private String title;
 
     private boolean dflag = false;
+    private boolean logflag = false;
 
     private String tempNo;
     private Double tempPoint;
@@ -113,12 +115,12 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
                                     corstr = new ArrayList<String>();
                                     cornum = new ArrayList<Double>();
-                                    for(int i = 0;i<ansList.size()-1;i++){//正解データを正解と配列に分ける
+                                    for(int i = 0;i<ansList2.size()-1;i++){//正解データを正解と配列に分ける
                                         String a = ansList2.get(i).get(0);
 
                                         corstr.add(a);//正解
                                         Double d;
-                                        if(ansList.get(i).get(1)==""){
+                                        if(ansList2.get(i).get(1).equals("") || ansList2.get(i).get(1).equals(" ")){
                                             d = Double.valueOf(0);
                                         }else{
                                             d = Double.valueOf(ansList2.get(i).get(1));
@@ -175,6 +177,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                 else
                     kaitou.add("　");
                 }
+            kaitou.add(anser.get(1));
             sendAns(kaitou);
         }
 
@@ -186,6 +189,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         tempNo = anser.get(0);
         tempPoint = point;
 
+        if(logflag == false)
         log.setText("読み取り済\n"+mcmsg+"\n"+tempDate+"\n"+tempNo+"\n"+tempPoint);
 
 
@@ -199,6 +203,10 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
     //GASへの解答の送信処理
     public  void sendGas(ArrayList<Object> testCor, ArrayList<ArrayList<Object>> allSend){
+        logflag = true;
+        TextView log = (TextView)v.findViewById(R.id.log);
+        log.setText("保存中");
+
 
         bundle = getArguments();
         System.out.println(bundle.getString("TextView"));
@@ -208,7 +216,6 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         params.add(allSend);//個人集計群
 
 //        params.add("テスト名");
-
 
 
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
@@ -222,11 +229,14 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                             @Override
                             public void run() {
                                 if (op == null || op.getError() != null) {
+                                    ImageView save = (ImageView)v.findViewById(R.id.saveBtn);
+                                    save.setImageResource(R.drawable.xsavebutton);
                                     Toast.makeText(getContext(),"保存エラー", Toast.LENGTH_SHORT).show();
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
+                                    dflag = true;
+                                    logflag = false;
                                 } else {
                                     //戻ってくる型は、スクリプト側の記述によって変わる
-                                    Toast.makeText(getContext(),"保存完了", Toast.LENGTH_SHORT).show();
                                     ArrayList<ArrayList<String>> ansList = (ArrayList<ArrayList<String>>) op.getResponse().get("result");
 
                                     FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -245,9 +255,13 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     }
 
     public void sendAns(final ArrayList<String> ans){
+
         Bundle bundle = getArguments();
         List<Object> params = new ArrayList<>();
-        params.add(bundle.getString("ans"));
+        params.add(bundle.getString("TextTag"));
+        params.add(bundle.getString("TextView"));
+        params.add(ans);
+
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
 
         mGoogleScript.execute(MainActivity.SCRIPT_URL, "answ",
@@ -259,6 +273,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                             @Override
                             public void run() {
                                 if (op == null || op.getError() != null) {
+
                                     Toast.makeText(getContext(),"保存エラー", Toast.LENGTH_SHORT).show();
                                     System.out.println("Script:error"); //       textView.append("Script結果:エラー\n");
                                 } else {
@@ -286,8 +301,11 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.saveBtn:
+                ImageView save = (ImageView)v.findViewById(R.id.saveBtn);
+
                 if(dflag == true) {
                     dflag = false;
+                    save.setImageResource(R.drawable.savebutton2);
                     save();
                     //画面切り替え
 //                    FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -512,9 +530,10 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
                                 if(textView != null) {
                                     textView.setText("");
-
-                                    logmsg = ("読み取り中\n"+String.format("検出マーク数: %d", info.markerCount));
-                                    log.setText(logmsg);
+                                    if(logflag==false){
+                                        logmsg = ("読み取り中\n"+String.format("検出進行度: %d", info.markerCount));
+                                        log.setText(logmsg);
+                                    }
 
                                 }
                             }

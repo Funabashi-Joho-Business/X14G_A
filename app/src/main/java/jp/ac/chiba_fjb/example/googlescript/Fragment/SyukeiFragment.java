@@ -204,6 +204,7 @@ public class SyukeiFragment extends Fragment implements View.OnClickListener {
                             textView.setGravity(Gravity.RIGHT);
                             break;
                         case 2://採点日時 要確認
+                            textView.setGravity(Gravity.LEFT);
                             s = 161;
                             textView.setText(ListR.get(i * 3 + 2));//258
                             break;
