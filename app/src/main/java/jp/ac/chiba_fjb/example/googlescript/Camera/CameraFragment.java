@@ -15,6 +15,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private int mVisibility;
     private boolean mStopFlag;
     SimpleDateFormat fmt = new SimpleDateFormat("yy/MM/dd hh:mm");
+    SimpleDateFormat logfmt = new SimpleDateFormat("MM/dd hh:mm");
 
     private ArrayList<ArrayList<Object>> allSend = new ArrayList<ArrayList<Object>>();//個人別集計送信配列
     private ArrayList<Object> testCor = new ArrayList<Object>();//テスト毎集計
@@ -57,8 +59,10 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     private String logmsg = "";
     private String title;
 
-    private boolean dflag = false;
-    private boolean logflag = false;
+    private boolean dflag = false;//連続して保存してしまわないためのフラグ
+    private boolean logflag = false;//保存中に新たにログに出力してしまわないためのフラグ
+
+    private int i = 0;
 
     private String tempNo;
     private Double tempPoint;
@@ -123,7 +127,11 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                                         if(ansList2.get(i).get(1).equals("") || ansList2.get(i).get(1).equals(" ")){
                                             d = Double.valueOf(0);
                                         }else{
-                                            d = Double.valueOf(ansList2.get(i).get(1));
+                                            if(ansList2.get(i).get(1) instanceof String){
+                                                d = Double.valueOf(0);
+                                            }else{
+                                                d = Double.valueOf(ansList2.get(i).get(1));
+                                            }
                                         }
 
                                         cornum.add(Double.valueOf(d));
@@ -137,6 +145,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
 
 
     public void Agg(ArrayList<String>anser){//集計処理
+        final Handler handler=new Handler();
         dflag = true;
         Double point = 0.0;
         Date date = new Date();
@@ -181,31 +190,42 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
             sendAns(kaitou);
         }
 
+        LinearLayout log = (LinearLayout) v.findViewById(R.id.log);
+        TextView text = new TextView(getContext());
 
-        TextView log = (TextView)v.findViewById(R.id.log);
+
+
+
 
         //簡易ログ用データ
-        tempDate = date.toString();
+        tempDate = logfmt.format(date);
         tempNo = anser.get(0);
         tempPoint = point;
 
-        if(logflag == false)
-        log.setText("読み取り済\n"+mcmsg+"\n"+tempDate+"\n"+tempNo+"\n"+tempPoint);
+        if(logflag == false) {
+            text.setText(mcmsg + "\n" + tempDate + "\n" + tempNo + "\n" + tempPoint);
+            log.addView(text,0);
 
-
-        //試験別集計データ
-        testCor.add(anser.get(0));//受験者番号
-        testCor.add(point);//点数
-        testCor.add(fmt.format(date));//採点日時
-
+            //試験別集計データ
+            testCor.add(anser.get(0));//受験者番号
+            testCor.add(point);//点数
+            testCor.add(fmt.format(date));//採点日時
+        }
 
     }
 
     //GASへの解答の送信処理
     public  void sendGas(ArrayList<Object> testCor, ArrayList<ArrayList<Object>> allSend){
         logflag = true;
-        TextView log = (TextView)v.findViewById(R.id.log);
-        log.setText("保存中");
+
+
+//                LinearLayout log = (LinearLayout) v.findViewById(R.id.log);
+//                TextView text = new TextView(getContext());
+//                text.setText("保存中");
+//                log.addView(text,0);
+
+
+
 
 
         bundle = getArguments();
@@ -215,7 +235,6 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         params.add(testCor);//試験別集計
         params.add(allSend);//個人集計群
 
-//        params.add("テスト名");
 
 
         mGoogleScript = new GoogleScript(getActivity(),SCOPES);
@@ -339,6 +358,12 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
     }
 
     private void save() {
+        LinearLayout log = (LinearLayout) v.findViewById(R.id.log);
+        log.removeAllViews();
+        TextView text = new TextView(getContext());
+        text.setText("保存中");
+        log.addView(text,0);
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -379,6 +404,12 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         v.findViewById(R.id.saveBtn).setOnClickListener(this);
         v.findViewById(R.id.light).setOnClickListener(this);
         v.findViewById(R.id.back).setOnClickListener(this);
+
+        if(bundle.getString("Class").equals("Kaitou")) {
+            v.findViewById(R.id.saveBtn).setVisibility(View.GONE);
+
+
+        }
 
         return v;
     }
@@ -526,14 +557,27 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
                         public void run() {
                             if(getView()!=null){
                                 TextView textView = (TextView) getView().findViewById(R.id  .textView2);
-                                TextView log = (TextView)v.findViewById(R.id.log);
+                                LinearLayout log = (LinearLayout) v.findViewById(R.id.log);
 
                                 if(textView != null) {
                                     textView.setText("");
-                                    if(logflag==false){
-                                        logmsg = ("読み取り中\n"+String.format("検出進行度: %d", info.markerCount));
-                                        log.setText(logmsg);
-                                    }
+
+//                                    if(logflag==false) {
+//                                        TextView text = new TextView(getContext());
+//
+//                                        logmsg = ("読み取り中\n" + String.format("検出進行度: %d", info.markerCount));
+//                                        textView = (TextView) log.getChildAt(1);
+//
+//                                        if (log.getChildCount() > 1) {
+//                                            if (!textView.getText().equals(logmsg)) {
+//                                                text.setText(logmsg);
+//                                                log.addView(text, 0);
+//                                            }
+//                                        }else{
+//                                            text.setText(logmsg);
+//                                            log.addView(text, 0);
+//                                        }
+//                                    }
 
                                 }
                             }

@@ -53,15 +53,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/seekBar"
             android:max="255"
-            style="@android:style/Widget.Material.SeekBar"
+
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             />
 
-        <TextView
-            android:text="待機中"
-            android:id="@+id/log"
+        <ScrollView
             android:layout_width="150dp"
             android:layout_height="200dp"
             android:background="@drawable/corner"
@@ -70,18 +68,31 @@
             android:layout_above="@+id/textView"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:padding="20dp" />
+            android:padding="20dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:text="待機中"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </ScrollView>
 
         <ImageView
             app:srcCompat="@drawable/xsavebutton"
             android:id="@+id/saveBtn"
             android:layout_alignParentTop="true"
-            android:layout_alignRight="@+id/log"
-            android:layout_alignEnd="@+id/log"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
             android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginRight="10dp" />
+            android:layout_height="52dp" />
 
         <ImageView
             android:layout_height="36dp"
