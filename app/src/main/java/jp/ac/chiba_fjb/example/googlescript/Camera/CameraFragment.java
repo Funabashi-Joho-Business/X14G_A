@@ -194,17 +194,16 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         TextView text = new TextView(getContext());
 
 
-
-
-
         //簡易ログ用データ
         tempDate = logfmt.format(date);
         tempNo = anser.get(0);
         tempPoint = point;
 
         if(logflag == false) {
-            text.setText(mcmsg + "\n" + tempDate + "\n" + tempNo + "\n" + tempPoint);
+            text.setTextSize(12.5f);
+            text.setText(mcmsg + "\n" + tempDate + "\n"+"受験者番号:"+ tempNo + "\n" +"点数"+ tempPoint+"\n");
             log.addView(text,0);
+
 
             //試験別集計データ
             testCor.add(anser.get(0));//受験者番号
@@ -361,6 +360,7 @@ public class CameraFragment extends Fragment implements CameraPreview.SaveListen
         LinearLayout log = (LinearLayout) v.findViewById(R.id.log);
         log.removeAllViews();
         TextView text = new TextView(getContext());
+        text.setTextSize(12.5f);
         text.setText("保存中");
         log.addView(text,0);
 
