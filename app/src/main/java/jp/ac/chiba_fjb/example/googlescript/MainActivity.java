@@ -6,28 +6,18 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
-
-import com.google.api.services.script.model.Operation;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
-import java.util.ArrayList;
-import java.util.List;
 
-import jp.ac.chiba_fjb.example.googlescript.Fragment.SyukeiFragment;
 import jp.ac.chiba_fjb.example.googlescript.Fragment.TopFragment;
-
-import static java.security.AccessController.getContext;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 //    private Handler mHandler = new Handler();
 //    private View v;
 //    private Bundle bundle;
-
+    private Permission mPermission;
     public static final String SCRIPT_URL =
             "1Xqgsbl5TcisKN1eAJLcIimVcUj6HtjREVe8Mia97yOANyas00pd9f1c2";
 
@@ -98,11 +88,20 @@ public class MainActivity extends AppCompatActivity {
 //        allSend.add(test2);
 //        sendGas(testCor,allSend);
 
+        mPermission = new Permission();
+        mPermission.setOnResultListener(new Permission.ResultListener() {
+            @Override
+            public void onResult() {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.mainLayout, new TopFragment(), TopFragment.class.getName());
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+        mPermission.requestPermissions(this);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainLayout, new TopFragment(), TopFragment.class.getName());
-        ft.addToBackStack(null);
-        ft.commit();
+
+
     }
 
 //    public  void sendGas(ArrayList<Object> testCor, ArrayList<ArrayList<Object>> allSend){
@@ -177,5 +176,9 @@ public class MainActivity extends AppCompatActivity {
         }
 //        mGoogleScript.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        mPermission.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 }

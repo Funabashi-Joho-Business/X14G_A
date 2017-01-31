@@ -139,6 +139,10 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
 
         tensu = a.get(0).toString();
 
+        if(tensu.equals("undefined")){
+            tensu = "0";
+        }
+
         kid.setText(id);
         ktensu.setText(tensu);
 
@@ -178,14 +182,16 @@ public class Kozinseiseki extends DialogFragment implements View.OnClickListener
                             s = 66;
                             textView.setText(kt[0][(t-1)*10+i]);
                             //正解のときに色を変える
-                            if(!kt[0][(t-1)*10+i].equals("")&&kt[0][(t-1)*10+i].equals(kt[1][(t-1)*10+i])) {
+                            if(kt[0][(t-1)*10+i] != null&&!kt[0][(t-1)*10+i].equals("")&&!kt[0][(t-1)*10+i].equals(" ")&&
+                                    kt[0][(t-1)*10+i].equals(kt[1][(t-1)*10+i])) {
                                 textView.setBackgroundResource(R.drawable.btap);
                             }
                             break;
                         case 2://解答
                             s = 66;
                             textView.setText(kt[1][(t-1)*10+i]);
-                            if(!kt[0][(t-1)*10+i].equals("")&&kt[0][(t-1)*10+i].equals(kt[1][(t-1)*10+i])) {
+                            if(kt[0][(t-1)*10+i] != null&&!kt[0][(t-1)*10+i].equals("")&&!kt[0][(t-1)*10+i].equals(" ")&&
+                                    kt[0][(t-1)*10+i].equals(kt[1][(t-1)*10+i])) {
                                 textView.setBackgroundResource(R.drawable.btap);
                             }
                             break;

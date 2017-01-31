@@ -151,7 +151,17 @@ public class KaitouFragment extends Fragment implements View.OnClickListener, On
             layout.setBackgroundResource(R.drawable.kborder);
 
             EditText testNo = (EditText) v.findViewById(R.id.testNo);
-            testNo.setText("101");
+            String string = "000";
+        if(bundle.getString("Class").equals("TOP")){
+            if(ansList.get(80).get(0) != null || !ansList.get(80).get(0).equals("") || !ansList.get(80).get(0).equals(" ")){
+                string = String.valueOf(ansList.get(80).get(0));
+            }
+        }else if(bundle.getString("Class").equals("Camera")){
+            if(ansList.get(0).get(80) != null || !ansList.get(80).get(0).equals("") || !ansList.get(80).get(0).equals(" ")){
+                string = String.valueOf(ansList.get(0).get(80));
+            }
+        }
+            testNo.setText(string);
             testNo.setInputType(InputType.TYPE_CLASS_NUMBER);
 
 //        TextView testtitle = (TextView) v.findViewById(R.id.testtitle);
